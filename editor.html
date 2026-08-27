@@ -422,6 +422,8 @@
             <span class="header-badge">Editor Visual de Conteúdo</span>
         </div>
         <div class="header-actions">
+            <button id="btn-project-meta" class="btn" title="Editar título, subtítulo, links e rodapé">⚙️ Metadados</button>
+            <button id="btn-reset-config" class="btn" title="Descarta alterações locais e recarrega do config.js original">🔄 Recarregar config.js</button>
             <button id="btn-save-draft" class="btn" title="Salva no navegador">💾 Salvar Rascunho</button>
             <button id="btn-show-code" class="btn btn-primary">📋 Ver / Copiar config.js</button>
             <button id="btn-download-config" class="btn btn-success">📥 Baixar config.js</button>
@@ -559,6 +561,64 @@
 
     </div>
 
+    <!-- Modal Project Metadata -->
+    <div class="modal" id="meta-modal">
+        <div class="modal-card" style="width: 650px;">
+            <div class="modal-header">
+                <h3>⚙️ Metadados Gerais do Projeto</h3>
+                <button class="btn" id="btn-close-meta">&times; Fechar</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Título Principal</label>
+                    <input type="text" id="meta-title">
+                </div>
+                <div class="form-group">
+                    <label>Subtítulo</label>
+                    <input type="text" id="meta-subtitle">
+                </div>
+                <div class="form-group">
+                    <label>Autoria / Byline</label>
+                    <input type="text" id="meta-byline">
+                </div>
+                <div class="form-group">
+                    <label>Data & Local</label>
+                    <input type="text" id="meta-date">
+                </div>
+                <div class="form-group">
+                    <label>Texto do Rodapé / Licença</label>
+                    <input type="text" id="meta-footer">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>URL Archive.org</label>
+                        <input type="text" id="meta-archiveUrl">
+                    </div>
+                    <div class="form-group">
+                        <label>URL Wiki / Fonte</label>
+                        <input type="text" id="meta-wikiUrl">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Cor do Marcador</label>
+                        <input type="text" id="meta-markerColor" placeholder="#0ea5e9">
+                    </div>
+                    <div class="form-group">
+                        <label>Tema</label>
+                        <select id="meta-theme">
+                            <option value="dark">Escuro (Dark)</option>
+                            <option value="light">Claro (Light)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div style="padding: 14px 20px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px;">
+                <button class="btn btn-primary" id="btn-save-meta">💾 Salvar Metadados</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Code -->
     <div class="modal" id="code-modal">
         <div class="modal-card">
@@ -584,7 +644,14 @@
         const availableImages = ["assets/images/4807648_karuvadgraphy.jpg", "assets/images/bernardo_20260730_120824.jpg", "assets/images/bernardo_20260801_101242.jpg", "assets/images/bernardo_20260801_103624.jpg", "assets/images/bernardo_20260801_103833.jpg", "assets/images/bernardo_20260801_104250.jpg", "assets/images/bernardo_20260801_104333.jpg", "assets/images/bernardo_20260801_104354.jpg", "assets/images/bernardo_20260801_104407.jpg", "assets/images/bernardo_20260801_110027.jpg", "assets/images/bernardo_20260801_111049.jpg", "assets/images/bernardo_20260801_111101.jpg", "assets/images/bernardo_20260801_111258.jpg", "assets/images/bernardo_20260801_112327.jpg", "assets/images/bernardo_20260801_112340.jpg", "assets/images/bernardo_20260801_153306.jpg", "assets/images/f_20260730_2026-07-30-104121526.jpg", "assets/images/f_20260730_2026-07-30-104125522.jpg", "assets/images/f_20260730_20260730_094051.jpg", "assets/images/f_20260730_20260730_094332.jpg", "assets/images/f_20260730_20260730_102921.jpg", "assets/images/f_20260730_20260730_102925.jpg", "assets/images/f_20260730_20260730_104010.jpg", "assets/images/f_20260730_20260730_105213.jpg", "assets/images/f_20260730_20260730_115505.jpg", "assets/images/f_20260730_20260730_115727.jpg", "assets/images/f_20260730_20260730_115851.jpg", "assets/images/f_20260730_20260730_115909.jpg", "assets/images/f_20260730_20260730_120248.jpg", "assets/images/f_20260730_20260730_120254.jpg", "assets/images/f_20260730_20260730_120300.jpg", "assets/images/f_20260730_20260730_121125.jpg", "assets/images/f_20260730_20260730_121238.jpg", "assets/images/f_20260730_20260730_161511.jpg", "assets/images/f_20260730_20260730_161526.jpg", "assets/images/f_20260730_20260730_162324.jpg", "assets/images/f_20260730_20260730_164206.jpg", "assets/images/f_20260730_20260730_164252.jpg", "assets/images/f_20260731_20260731_101441.jpg", "assets/images/f_20260731_20260731_101457.jpg", "assets/images/f_20260731_20260731_101806.jpg", "assets/images/f_20260731_20260731_105944.jpg", "assets/images/f_20260731_20260731_105950.jpg", "assets/images/f_20260731_20260731_115224.jpg", "assets/images/f_20260731_20260731_133810.jpg", "assets/images/f_20260731_20260731_135424.jpg", "assets/images/f_20260731_20260731_135428.jpg", "assets/images/f_20260731_20260731_140420.jpg", "assets/images/f_20260731_20260731_140509.jpg", "assets/images/f_20260731_20260731_142728.jpg", "assets/images/f_20260731_20260731_145423.jpg", "assets/images/f_20260731_20260731_150134.jpg", "assets/images/f_20260731_20260731_150909.jpg", "assets/images/f_20260731_20260731_154317.jpg", "assets/images/f_20260731_20260731_175222.jpg", "assets/images/f_20260731_20260731_175312.jpg", "assets/images/f_20260731_20260731_175324.jpg", "assets/images/f_bacia_acarau_20260801_100417.jpg", "assets/images/f_bacia_acarau_20260801_103259.jpg", "assets/images/f_bacia_acarau_20260801_103317.jpg", "assets/images/f_bacia_acarau_20260801_103321.jpg", "assets/images/f_bacia_acarau_20260801_103338.jpg", "assets/images/f_bacia_acarau_20260801_103347.jpg", "assets/images/f_bacia_acarau_20260801_103433.jpg", "assets/images/f_bacia_acarau_20260801_103455.jpg", "assets/images/f_bacia_acarau_20260801_103459.jpg", "assets/images/f_bacia_acarau_20260801_103718.jpg", "assets/images/f_bacia_acarau_20260801_110447.jpg", "assets/images/f_bacia_acarau_20260801_110450.jpg", "assets/images/f_bacia_acarau_20260801_110810.jpg", "assets/images/f_bacia_acarau_20260801_110813.jpg", "assets/images/f_bacia_acarau_20260801_110924.jpg", "assets/images/f_bacia_acarau_20260801_111304.jpg", "assets/images/f_bacia_acarau_20260801_111526.jpg", "assets/images/f_bacia_acarau_20260801_112042.jpg", "assets/images/f_bacia_riogrande_20260801_120915.jpg", "assets/images/f_bacia_riogrande_20260801_120920.jpg", "assets/images/f_bacia_riogrande_20260801_120935.jpg", "assets/images/f_bacia_riogrande_20260801_120939.jpg", "assets/images/f_bacia_riogrande_20260801_121101.jpg", "assets/images/f_bacia_riogrande_20260801_132815.jpg", "assets/images/f_bacia_riogrande_20260801_132822.jpg", "assets/images/f_bacia_riogrande_20260801_132825.jpg", "assets/images/f_bacia_riogrande_20260801_132833.jpg", "assets/images/f_bacia_riogrande_20260801_132844.jpg", "assets/images/f_bacia_riogrande_20260801_132847.jpg", "assets/images/f_bacia_riogrande_20260801_132906.jpg", "assets/images/f_bacia_riogrande_20260801_132920.jpg", "assets/images/f_bacia_riogrande_20260801_133541.jpg", "assets/images/f_bacia_riogrande_20260801_133620.jpg", "assets/images/f_bacia_tavares_20260801_113712.jpg", "assets/images/f_bacia_tavares_20260801_114512.jpg", "assets/images/f_bacia_tavares_20260801_114710.jpg", "assets/images/f_barcas_20260801_144152.jpg", "assets/images/f_barcas_20260801_144722.jpg", "assets/images/f_barcas_20260801_144734.jpg", "assets/images/f_barcas_20260801_160707.jpg", "assets/images/f_barcas_20260801_160846.jpg", "assets/images/f_barcas_20260801_162545.jpg", "assets/images/f_barcas_20260801_165143.jpg", "assets/images/f_caderno_1.jpg", "assets/images/f_caderno_2.jpg", "assets/images/f_caderno_3.jpg", "assets/images/f_caderno_4.jpg", "assets/images/f_caderno_5.jpg", "assets/images/f_caderno_6.jpg", "assets/images/f_notas_scanned_document.jpg", "assets/images/katia_20260730_120607.jpg", "assets/images/katia_20260730_121353.jpg", "assets/images/katia_20260730_121636.jpg", "assets/images/katia_20260730_121731.jpg", "assets/images/katia_20260730_150300.jpg", "assets/images/katia_20260730_150310.jpg", "assets/images/katia_20260730_150323~2.jpg", "assets/images/katia_20260730_150938.jpg", "assets/images/katia_20260731_123042.jpg", "assets/images/katia_20260731_123048.jpg", "assets/images/katia_20260731_133657.jpg", "assets/images/katia_20260731_133707.jpg", "assets/images/katia_20260731_133903.jpg", "assets/images/katia_20260731_134042.jpg", "assets/images/katia_20260731_140034.jpg", "assets/images/katia_20260731_140253.jpg", "assets/images/katia_20260731_140405.jpg", "assets/images/katia_20260731_140504.jpg", "assets/images/katia_20260731_140515.jpg", "assets/images/katia_20260731_141019.jpg", "assets/images/katia_20260731_141558.jpg", "assets/images/katia_20260731_142621.jpg", "assets/images/katia_20260731_145231.jpg", "assets/images/katia_20260801_101626.jpg", "assets/images/katia_20260801_102401.jpg", "assets/images/katia_20260801_103030.jpg", "assets/images/katia_20260801_103034.jpg", "assets/images/katia_20260801_103057.jpg", "assets/images/katia_20260801_103618.jpg", "assets/images/katia_20260801_104047.jpg", "assets/images/katia_20260801_104155.jpg", "assets/images/katia_20260801_104317.jpg", "assets/images/katia_20260801_104441.jpg", "assets/images/katia_20260801_110127.jpg", "assets/images/katia_screenshot_20260731_182850_maps~2.jpg", "assets/images/katia_screenshot_20260801_103724_maps.jpg", "assets/images/katia_screenshot_20260801_104638_maps.jpg", "assets/images/katia_screenshot_20260801_110215_maps.jpg", "assets/images/katia_screenshot_20260801_131747_merlin_bird_id.jpg", "assets/images/katia_screenshot_20260801_131818_merlin_bird_id.jpg", "assets/images/katia_screenshot_20260801_131830_merlin_bird_id.jpg", "assets/images/logos-todos.png", "assets/images/logos.png", "assets/images/rg_img_20260801_134355780.jpg", "assets/images/rg_img_20260801_134529459.jpg", "assets/images/rg_img_20260801_134602083.jpg", "assets/images/rg_img_20260801_134811606.jpg", "assets/images/rg_img_20260804_140657706~2.jpg", "assets/images/rg_img_20260804_191432563.jpg", "assets/images/rg_screenshot_20260801-133751.png", "assets/images/tropixel-url.png"];
 
         // Global State
-        let workingConfig = JSON.parse(JSON.stringify(config));
+        let workingConfig = (typeof config !== "undefined") ? JSON.parse(JSON.stringify(config)) : {
+            title: "MAR DAS COISAS",
+            subtitle: "",
+            byline: "",
+            date: "",
+            footer: "",
+            chapters: []
+        };
         let selectedIndex = 0;
         let map = null;
         let activeMarker = null;
@@ -910,11 +977,59 @@
         // 5. Code Generator & Exporting
         function generateConfigFileContent() {
             saveCurrentChapterFromForm();
-            return "var config = " + JSON.stringify(workingConfig, null, 4) + ";
-";
+            return "var config = " + JSON.stringify(workingConfig, null, 4) + ";\n";
         }
 
         function setupHeaderActions() {
+            // Project Metadata Modal
+            document.getElementById("btn-project-meta").addEventListener("click", function () {
+                document.getElementById("meta-title").value = workingConfig.title || "";
+                document.getElementById("meta-subtitle").value = workingConfig.subtitle || "";
+                document.getElementById("meta-byline").value = workingConfig.byline || "";
+                document.getElementById("meta-date").value = workingConfig.date || "";
+                document.getElementById("meta-footer").value = workingConfig.footer || "";
+                document.getElementById("meta-archiveUrl").value = workingConfig.archiveUrl || "";
+                document.getElementById("meta-wikiUrl").value = workingConfig.wikiUrl || "";
+                document.getElementById("meta-markerColor").value = workingConfig.markerColor || "#0ea5e9";
+                document.getElementById("meta-theme").value = workingConfig.theme || "dark";
+                document.getElementById("meta-modal").classList.add("open");
+            });
+
+            document.getElementById("btn-close-meta").addEventListener("click", function () {
+                document.getElementById("meta-modal").classList.remove("open");
+            });
+
+            document.getElementById("btn-save-meta").addEventListener("click", function () {
+                workingConfig.title = document.getElementById("meta-title").value;
+                workingConfig.subtitle = document.getElementById("meta-subtitle").value;
+                workingConfig.byline = document.getElementById("meta-byline").value;
+                workingConfig.date = document.getElementById("meta-date").value;
+                workingConfig.footer = document.getElementById("meta-footer").value;
+                workingConfig.archiveUrl = document.getElementById("meta-archiveUrl").value;
+                workingConfig.wikiUrl = document.getElementById("meta-wikiUrl").value;
+                workingConfig.markerColor = document.getElementById("meta-markerColor").value;
+                workingConfig.theme = document.getElementById("meta-theme").value;
+                saveDraft();
+                document.getElementById("meta-modal").classList.remove("open");
+                showToast("Metadados atualizados com sucesso!");
+            });
+
+            // Reset from config.js
+            document.getElementById("btn-reset-config").addEventListener("click", function () {
+                if (confirm("Deseja descartar as alterações locais e recarregar os dados originais do config.js?")) {
+                    localStorage.removeItem("mardascoisas_editor_draft");
+                    if (typeof config !== "undefined") {
+                        workingConfig = JSON.parse(JSON.stringify(config));
+                        selectedIndex = 0;
+                        renderChapterList();
+                        loadChapterIntoForm(0);
+                        showToast("Dados do config.js recarregados!");
+                    } else {
+                        alert("Arquivo config.js não foi encontrado no escopo global.");
+                    }
+                }
+            });
+
             // Show Code Modal
             document.getElementById("btn-show-code").addEventListener("click", function () {
                 const code = generateConfigFileContent();
