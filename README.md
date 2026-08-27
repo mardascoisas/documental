@@ -38,12 +38,12 @@ Abra no navegador em: `http://localhost:8080`
    git init
    git add .
    git commit -m "feat: initial scrollytelling release for Mar das Coisas"
-   git remote add origin git@github.com:<seu-usuario-ou-organizacao>/mardascoisas-scrollytelling.git
+   git remote add origin git@github.com:mardascoisas/documental.git
    git branch -M main
    git push -u origin main
    ```
 2. No GitHub, acesse **Settings > Pages** e defina o branch `main` (ou pasta raiz `/`) como fonte de publicação.
-3. O site estará disponível publicamente no endereço `https://<usuario>.github.io/<repositorio>/`.
+3. O site estará disponível publicamente no endereço `https://mardascoisas.github.io/documental/`.
 
 ---
 
