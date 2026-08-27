@@ -455,6 +455,79 @@ h2.chapter-title {
     transform: scale(1.3);
 }
 
+/* MapLibre Popup Dark Theme */
+.maplibregl-popup {
+    z-index: 30;
+    max-width: 320px !important;
+}
+
+.maplibregl-popup-content {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+    border-radius: var(--radius-md, 10px) !important;
+    padding: 14px 18px !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 15px rgba(56, 189, 248, 0.2) !important;
+    font-family: var(--font-body) !important;
+}
+
+.maplibregl-popup-content strong {
+    color: var(--accent, #38bdf8) !important;
+    font-size: 0.95rem;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 6px;
+    line-height: 1.3;
+}
+
+.maplibregl-popup-content small,
+.maplibregl-popup-content p,
+.maplibregl-popup-content div {
+    color: #cbd5e1 !important;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.maplibregl-popup-close-button {
+    color: #94a3b8 !important;
+    font-size: 1.2rem;
+    padding: 4px 8px;
+    top: 6px;
+    right: 6px;
+    transition: color 0.15s ease;
+}
+
+.maplibregl-popup-close-button:hover {
+    color: #ffffff !important;
+    background: transparent !important;
+}
+
+/* MapLibre Popup Tip Triangles */
+.maplibregl-popup-anchor-top .maplibregl-popup-tip {
+    border-bottom-color: #0f172a !important;
+}
+.maplibregl-popup-anchor-top-left .maplibregl-popup-tip {
+    border-bottom-color: #0f172a !important;
+}
+.maplibregl-popup-anchor-top-right .maplibregl-popup-tip {
+    border-bottom-color: #0f172a !important;
+}
+.maplibregl-popup-anchor-bottom .maplibregl-popup-tip {
+    border-top-color: #0f172a !important;
+}
+.maplibregl-popup-anchor-bottom-left .maplibregl-popup-tip {
+    border-top-color: #0f172a !important;
+}
+.maplibregl-popup-anchor-bottom-right .maplibregl-popup-tip {
+    border-top-color: #0f172a !important;
+}
+.maplibregl-popup-anchor-left .maplibregl-popup-tip {
+    border-right-color: #0f172a !important;
+}
+.maplibregl-popup-anchor-right .maplibregl-popup-tip {
+    border-left-color: #0f172a !important;
+}
+
 /* Modal Lightbox */
 .lightbox-modal {
     position: fixed;
