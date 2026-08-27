@@ -1,0 +1,144 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "dia-30-laco",
+        "title": "Base Oceanográfica IOUSP / LACO",
+        "category": "laboratorio",
+        "date": "2026-07-30",
+        "description": "Base de Pesquisa Clarimundo de Jesus (IOUSP) na Praia do Lamberto / Enseada do Flamengo."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -45.118891,
+          -23.499909
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "dia-31-cartas",
+        "title": "Dinâmica das Cartas (Praia do Lamberto / Enseada)",
+        "category": "ar-livre",
+        "date": "2026-07-31",
+        "description": "Roda ao ar livre à beira-mar com o baralho de cartas de ficção e futuros climáticos."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -45.118639,
+          -23.5
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "rio-acarau",
+        "title": "Rio Acaraú (Foz & Estuário)",
+        "category": "rio",
+        "date": "2026-08-01",
+        "description": "Percurso de observação de bacia hidrográfica, canalizações urbanas e efluentes."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -45.0682,
+          -23.4475
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "rio-tavares",
+        "title": "Rio Tavares (Manguezal)",
+        "category": "rio",
+        "date": "2026-08-01",
+        "description": "Monitoramento de margens, assoreamento e dinâmica de maré nos manguezais."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -45.074,
+          -23.441
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "rio-grande",
+        "title": "Bacia do Rio Grande",
+        "category": "rio",
+        "date": "2026-08-01",
+        "description": "Mapeamento de mata ciliar, resíduos flutuantes e circulação estuarina."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -45.0715,
+          -23.4355
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "dia-01-barcas",
+        "title": "Casa de Saúde Cultura Viva",
+        "category": "oficina",
+        "date": "2026-08-01",
+        "description": "Local da Oficina BARCAS e da plenária de síntese e encaminhamentos."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -45.078,
+          -23.438
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "track-rios",
+        "title": "Percurso Hidrográfico 01/08",
+        "category": "percurso"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -45.0682,
+            -23.4475
+          ],
+          [
+            -45.071,
+            -23.444
+          ],
+          [
+            -45.074,
+            -23.441
+          ],
+          [
+            -45.0725,
+            -23.438
+          ],
+          [
+            -45.0715,
+            -23.4355
+          ],
+          [
+            -45.078,
+            -23.438
+          ]
+        ]
+      }
+    }
+  ]
+}

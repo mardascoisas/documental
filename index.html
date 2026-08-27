@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mar das Coisas · Documentação Georreferenciada</title>
+    
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="Mar das Coisas · Documentação Georreferenciada">
+    <meta name="description" content="Narrativa em scrollytelling georreferenciada do encontro Mar das Coisas 2026 em Ubatuba: arte, ciência cidadã, tecnologias livres e águas.">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tropixelbr.github.io/mardascoisas/">
+    <meta property="og:title" content="Mar das Coisas · Scrollytelling Territorial">
+    <meta property="og:description" content="Narrativa cartográfica sobre ecologias marinhas, rios, manguezais e a Carta-Manifesto em Ubatuba.">
+    <meta property="og:image" content="assets/images/katia_20260731_140034.jpg">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- MapLibre GL JS -->
+    <link href="https://unpkg.com/maplibre-gl@4.0.0/dist/maplibre-gl.css" rel="stylesheet" />
+    <script src="https://unpkg.com/maplibre-gl@4.0.0/dist/maplibre-gl.js"></script>
+
+    <!-- Scrollama.js -->
+    <script src="https://unpkg.com/scrollama"></script>
+
+    <!-- Project Stylesheet -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+    <!-- Progress indicator -->
+    <div id="progress-bar"></div>
+
+    <!-- Floating Top Navigation -->
+    <nav class="top-nav">
+        <a href="#intro-capa" class="brand">
+            <span class="brand-dot"></span>
+            Mar das Coisas
+        </a>
+        <div class="nav-tools">
+            <button id="btn-toggle-map" class="tool-btn" title="Alternar visão de satélite">🗺️ Mapa: Vetor</button>
+            <a href="https://archive.org/details/mar-das-coisas-2026-ubatuba-doutor-f" target="_blank" rel="noopener" class="tool-btn" title="Ver vídeos no Internet Archive">🎬 Vídeos</a>
+            <a href="https://fonte.wiki/projetos/mardascoisas" target="_blank" rel="noopener" class="tool-btn" title="Acessar base completa no fonte.wiki">📖 Wiki</a>
+        </div>
+    </nav>
+
+    <!-- Quick Navigation Dots (Sidebar) -->
+    <div class="chapter-nav-dots" id="chapter-nav"></div>
+
+    <!-- Map Engine Background -->
+    <div id="map"></div>
+
+    <!-- Scrollytelling Story Container -->
+    <div id="story">
+        <div id="features">
+            <!-- Chapters dynamically injected by app.js from config.js -->
+        </div>
+    </div>
+
+    <!-- Image / Notebook Lightbox Modal -->
+    <div class="lightbox-modal" id="lightbox-modal">
+        <button class="lightbox-close" id="lightbox-close">&times;</button>
+        <div class="lightbox-content">
+            <img class="lightbox-img" id="lightbox-img" src="" alt="">
+            <div class="lightbox-caption" id="lightbox-caption"></div>
+        </div>
+    </div>
+
+    <!-- Configuration & Scripts -->
+    <script src="config.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
