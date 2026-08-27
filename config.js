@@ -4,11 +4,11 @@ var config = {
     "accessToken": "",
     "showMarkers": true,
     "markerColor": "#0ea5e9",
-    "theme": "dark",
+    "theme": "light",
     "use3dTerrain": false,
-    "title": "MAR DAS COISAS",
+    "title": "Mar das Coisas 2026",
     "subtitle": "Arte, Ciência Cidadã, Tecnologias Livres e Águas em Ubatuba",
-    "byline": "Tropixel · LACO / IOUSP · Ubatuba Ciências Culturas (/U.CC/) · Redes do Território",
+    "byline": "Tropixel · LACO / IOUSP · Ubatuba Ciências Culturas (/U.CC/)",
     "date": "30 de julho a 1º de agosto de 2026 · Ubatuba, SP",
     "footer": "Documentação aberta publicada sob licença Creative Commons Atribuição 4.0 Internacional (CC BY 4.0).",
     "archiveUrl": "https://archive.org/details/mar-das-coisas-2026-ubatuba-doutor-f",
@@ -32,7 +32,7 @@ var config = {
             "mapAnimation": "flyTo",
             "image": "assets/images/4807648_karuvadgraphy.jpg",
             "imageCaption": "Tropixel Mar das Coisas - 2026",
-            "description": "<p>O <strong>Mar das Coisas 2026</strong> reuniu em Ubatuba cientistas, artistas, educadores, ativistas socioambientais e comunidades costeiras entre 30 de julho e 1º de agosto de 2026. O encontro articulou ecologias marinhas, monitoramento comunitário de águas, bioacústica, arte-ciência cidadã e memórias territoriais.</p>\n            <p>Esta narrativa cartográfica percorre os três dias de imersão: das bancadas e tanques do laboratório oceanográfico às margens dos rios e manguezais urbanos, além da coleta de descobertas e informações para a construção coletiva da <em>Carta-Manifesto Mar das Coisas</em>.</p>"
+            "description": "<p>O <strong>Mar das Coisas 2026</strong> reuniu em Ubatuba cientistas, artistas, profissionais da educação, ativistas socioambientais e residentes da região entre 30 de julho e 1º de agosto de 2026. O encontro articulou ecologias marinhas, monitoramento comunitário de águas, bioacústica, arte-ciência cidadã e memórias territoriais.</p>\n            <p>Esta narrativa cartográfica percorre os três dias de imersão: das bancadas e tanques do laboratório oceanográfico às margens dos rios e manguezais urbanos, além da coleta de descobertas e informações para a construção coletiva da <em>Carta-Manifesto Mar das Coisas</em>.</p>"
         },
         {
             "id": "dia-30-laco",
