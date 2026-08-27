@@ -11,7 +11,7 @@ Este repositório foi concebido para publicação estática e gratuita no **GitH
 * **`index.html`**: Estrutura principal da aplicação web responsiva.
 * **`config.js`**: Arquivo central de configuração da narrativa, contendo as coordenadas, textos, mídias e alinhamentos de cada capítulo.
 * **`assets/data/locations.geojson`**: Dados georreferenciados com pontos de interesse (Base IOUSP/LACO, Praia do Lamberto, Rio Acaraú, Rio Tavares, Rio Grande, Casa de Saúde Cultura Viva) e trajetos fluviais.
-* **`assets/images/`**: Imagens e fac-símiles de campo otimizados para web (CC BY-SA 4.0).
+* **`assets/images/`**: Imagens e fac-símiles de campo otimizados para web (CC BY 4.0).
 * **`assets/css/style.css`**: Design moderno com cartões semi-transparentes (*glassmorphism*), navegação lateral e tipografia limpa.
 * **`assets/js/app.js`**: Motor de scrollytelling, transições de câmera no mapa, alternância para satélite e modal de zoom de imagens.
 
@@ -73,6 +73,6 @@ Para adicionar ou editar pontos da narrativa, basta modificar o arquivo [`config
 
 ## 🔗 Referências & Mídias
 
-* **Acervo de Vídeos (CC BY-SA 4.0):** [Internet Archive](https://archive.org/details/mar-das-coisas-2026-ubatuba-doutor-f)
+* **Acervo de Vídeos (CC BY 4.0):** [Internet Archive](https://archive.org/details/mar-das-coisas-2026-ubatuba-doutor-f)
 * **Enciclopédia & Wiki Completa:** [fonte.wiki](https://fonte.wiki/projetos/mardascoisas)
 * **Plataforma Documental:** [documental.xyz](https://documental.xyz)
