@@ -4,11 +4,19 @@
    ========================================================================== */
 
 document.addEventListener("DOMContentLoaded", function () {
+    // Configure marked for friendly linebreaks and GFM if present
+    if (typeof marked !== "undefined" && marked.setOptions) {
+        marked.setOptions({
+            gfm: true,
+            breaks: true
+        });
+    }
+
     const scroller = scrollama();
     let map = null;
     let markers = [];
     let currentChapterIndex = 0;
-    let isSatellite = false;
+    let isSatellite = config.defaultBasemap === "satellite";
 
     // 1. Initialize Map
     const initialCenter = config.chapters[0].location.center;
@@ -36,9 +44,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // 2. Build DOM elements for story cards & navigation dots
     buildStoryDOM();
     buildNavDots();
+    setupCarouselArrows();
 
     // 3. Load GeoJSON data & layers once map is loaded
     map.on("load", function () {
+        if (isSatellite) {
+            enableSatelliteMode();
+        }
         fetch("assets/data/locations.geojson?t=" + Date.now())
             .then(res => res.json())
             .then(geojson => {
@@ -74,9 +86,40 @@ document.addEventListener("DOMContentLoaded", function () {
                             el.className = "map-marker";
                             el.setAttribute("data-id", feature.properties.id || "");
                             
-                            const popup = new maplibregl.Popup({ offset: 12 }).setHTML(
-                                `<strong>${feature.properties.title}</strong><br><small>${feature.properties.description || ""}</small>`
-                            );
+                            // Check for linked chapter (by chapter, chapterId, targetChapter, or id)
+                            const targetChapterId = feature.properties.chapter || feature.properties.chapterId || feature.properties.targetChapter || feature.properties.id;
+                            const linkedChapter = config.chapters.find(c => c.id === targetChapterId);
+
+                            let chapterLinkHtml = "";
+                            if (linkedChapter) {
+                                const chapterName = linkedChapter.title || linkedChapter.badge || `Capítulo ${config.chapters.indexOf(linkedChapter) + 1}`;
+                                chapterLinkHtml = `
+                                    <div class="popup-chapter-action">
+                                        <button type="button" class="btn-popup-chapter" onclick="window.scrollToChapterId('${targetChapterId}')">
+                                            <span>📖 Ir para o relato</span>
+                                            <span class="btn-popup-chapter-name">${chapterName} &rarr;</span>
+                                        </button>
+                                    </div>
+                                `;
+                            }
+
+                            let parsedDesc = feature.properties.description || "";
+                            if (typeof marked !== "undefined" && marked.parseInline && parsedDesc) {
+                                parsedDesc = marked.parseInline(parsedDesc);
+                            }
+                            const descHtml = parsedDesc ? `<div class="popup-desc">${parsedDesc}</div>` : "";
+                            const catBadge = feature.properties.category ? `<span class="popup-category-badge">${feature.properties.category}</span>` : "";
+
+                            const popupHtml = `
+                                <div class="map-popup-card">
+                                    ${catBadge}
+                                    <h4 class="popup-title">${feature.properties.title || "Ponto de Interesse"}</h4>
+                                    ${descHtml}
+                                    ${chapterLinkHtml}
+                                </div>
+                            `;
+
+                            const popup = new maplibregl.Popup({ offset: 14, maxWidth: "340px" }).setHTML(popupHtml);
 
                             const marker = new maplibregl.Marker({ element: el })
                                 .setLngLat(feature.geometry.coordinates)
@@ -96,6 +139,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 5. Function to Build Story HTML dynamically from config.js
     function buildStoryDOM() {
+        // Sync header brand title with config.title
+        const brandTextEl = document.querySelector(".top-nav .brand-text");
+        if (brandTextEl && config.title) {
+            brandTextEl.textContent = config.title;
+        }
+
         const featuresContainer = document.getElementById("features");
         if (!featuresContainer) return;
 
@@ -132,8 +181,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 `;
             }
 
-            // Text description
-            cardContent += `<div class="card-text">${chapter.description}</div>`;
+            // Text description (supports Markdown or existing HTML)
+            let formattedDescription = chapter.description || "";
+            if (typeof marked !== "undefined" && typeof marked.parse === "function") {
+                formattedDescription = marked.parse(formattedDescription);
+            }
+            cardContent += `<div class="card-text">${formattedDescription}</div>`;
 
             cardContent += `</div>`;
             stepDiv.innerHTML = cardContent;
@@ -143,16 +196,61 @@ document.addEventListener("DOMContentLoaded", function () {
         // Add Footer
         const footerDiv = document.createElement("div");
         footerDiv.className = "story-footer";
+
+        let footerLinks = [];
+        if (config.archiveUrl && config.archiveUrl.trim()) {
+            footerLinks.push(`<a href="${config.archiveUrl.trim()}" target="_blank" rel="noopener" class="footer-btn">🎬 Internet Archive</a>`);
+        }
+        if (config.wikiUrl && config.wikiUrl.trim()) {
+            footerLinks.push(`<a href="${config.wikiUrl.trim()}" target="_blank" rel="noopener" class="footer-btn">📖 Documentação Wiki</a>`);
+        }
+
+        const linksHtml = footerLinks.length > 0
+            ? `<div class="footer-actions">${footerLinks.join("")}</div>`
+            : "";
+
+        let footerText = config.footer || "";
+        if (typeof marked !== "undefined" && marked.parseInline && footerText) {
+            footerText = marked.parseInline(footerText);
+        }
+
         footerDiv.innerHTML = `
-            <p><strong>${config.title}</strong> · ${config.date}</p>
-            <p>${config.footer}</p>
-            <div style="margin-top: 16px;">
-                <a href="${config.archiveUrl}" target="_blank" rel="noopener" style="color: var(--accent); margin: 0 10px;">Coleção Internet Archive</a> |
-                <a href="${config.wikiUrl}" target="_blank" rel="noopener" style="color: var(--accent); margin: 0 10px;">Páginas no fonte.wiki</a>
+            <div class="footer-card">
+                <div class="footer-brand">
+                    <strong class="footer-title">${config.title}</strong>
+                    ${config.date ? `<span class="footer-date"> · ${config.date}</span>` : ""}
+                </div>
+                ${config.byline ? `<p class="footer-byline">${config.byline}</p>` : ""}
+                ${footerText ? `<div class="footer-text">${footerText}</div>` : ""}
+                ${linksHtml}
             </div>
         `;
         featuresContainer.appendChild(footerDiv);
     }
+
+    function navigateToChapter(index) {
+        if (index < 0 || index >= config.chapters.length) return;
+        const chapter = config.chapters[index];
+        if (!chapter) return;
+        const targetStep = document.getElementById(chapter.id);
+        if (targetStep) {
+            targetStep.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+    }
+
+    window.scrollToChapterId = function (chapterId) {
+        if (!chapterId) return;
+        const targetStep = document.getElementById(chapterId);
+        if (targetStep) {
+            targetStep.scrollIntoView({ behavior: "smooth", block: "center" });
+            // Close any open popups so they don't block the view
+            markers.forEach(m => {
+                if (m.marker && m.marker.getPopup() && m.marker.getPopup().isOpen()) {
+                    m.marker.getPopup().remove();
+                }
+            });
+        }
+    };
 
     // 6. Build Navigation Dots (sidebar)
     function buildNavDots() {
@@ -164,17 +262,86 @@ document.addEventListener("DOMContentLoaded", function () {
             const dot = document.createElement("div");
             dot.className = `nav-dot ${idx === 0 ? "active" : ""}`;
             dot.setAttribute("data-target-index", idx);
-            dot.innerHTML = `<span class="tooltip">${chapter.title}</span>`;
+            dot.innerHTML = `<span class="tooltip">${chapter.title || chapter.badge || `Capítulo ${idx + 1}`}</span>`;
 
             dot.addEventListener("click", function () {
-                const targetStep = document.getElementById(chapter.id);
-                if (targetStep) {
-                    targetStep.scrollIntoView({ behavior: "smooth" });
-                }
+                navigateToChapter(idx);
             });
 
             navContainer.appendChild(dot);
         });
+    }
+
+    // 6b. Setup Carousel Navigation Arrows (Instagram-like)
+    function setupCarouselArrows() {
+        const prevBtn = document.getElementById("carousel-prev");
+        const nextBtn = document.getElementById("carousel-next");
+        if (!prevBtn || !nextBtn) return;
+
+        prevBtn.addEventListener("click", function () {
+            if (currentChapterIndex > 0) {
+                navigateToChapter(currentChapterIndex - 1);
+            }
+        });
+
+        nextBtn.addEventListener("click", function () {
+            if (currentChapterIndex < config.chapters.length - 1) {
+                navigateToChapter(currentChapterIndex + 1);
+            }
+        });
+
+        // Keyboard Navigation (ArrowLeft & ArrowRight)
+        window.addEventListener("keydown", function (e) {
+            if (document.activeElement && ["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName)) return;
+            const modal = document.getElementById("lightbox-modal");
+            if (modal && modal.classList.contains("open")) return;
+
+            if (e.key === "ArrowLeft") {
+                if (currentChapterIndex > 0) {
+                    e.preventDefault();
+                    navigateToChapter(currentChapterIndex - 1);
+                }
+            } else if (e.key === "ArrowRight") {
+                if (currentChapterIndex < config.chapters.length - 1) {
+                    e.preventDefault();
+                    navigateToChapter(currentChapterIndex + 1);
+                }
+            }
+        });
+
+        updateCarouselArrows();
+    }
+
+    function updateCarouselArrows() {
+        const prevBtn = document.getElementById("carousel-prev");
+        const nextBtn = document.getElementById("carousel-next");
+        if (!prevBtn || !nextBtn) return;
+
+        const totalChapters = config.chapters.length;
+
+        if (currentChapterIndex <= 0) {
+            prevBtn.classList.add("disabled");
+            prevBtn.setAttribute("disabled", "true");
+        } else {
+            prevBtn.classList.remove("disabled");
+            prevBtn.removeAttribute("disabled");
+            const prevChapter = config.chapters[currentChapterIndex - 1];
+            if (prevChapter) {
+                prevBtn.title = `Capítulo anterior: ${prevChapter.title || prevChapter.badge || ""}`;
+            }
+        }
+
+        if (currentChapterIndex >= totalChapters - 1) {
+            nextBtn.classList.add("disabled");
+            nextBtn.setAttribute("disabled", "true");
+        } else {
+            nextBtn.classList.remove("disabled");
+            nextBtn.removeAttribute("disabled");
+            const nextChapter = config.chapters[currentChapterIndex + 1];
+            if (nextChapter) {
+                nextBtn.title = `Próximo capítulo: ${nextChapter.title || nextChapter.badge || ""}`;
+            }
+        }
     }
 
     // 7. Initialize Scrollama
@@ -192,6 +359,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (!chapter) return;
                 currentChapterIndex = chapterIndex;
+
+                // Update Carousel Arrows
+                updateCarouselArrows();
 
                 // Update active CSS classes
                 document.querySelectorAll(".step").forEach(s => s.classList.remove("active"));
@@ -215,12 +385,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     });
                 }
 
-                // Highlight corresponding map marker
+                // Highlight corresponding map marker or control chapter visibility
+                const chapterShowMarkers = chapter.showMarkers !== false;
                 markers.forEach(m => {
-                    if (m.id === chapter.id) {
-                        m.el.classList.add("active");
+                    if (!chapterShowMarkers) {
+                        m.el.style.display = "none";
                     } else {
-                        m.el.classList.remove("active");
+                        m.el.style.display = "";
+                        if (m.id === chapter.id) {
+                            m.el.classList.add("active");
+                        } else {
+                            m.el.classList.remove("active");
+                        }
                     }
                 });
             })
@@ -237,66 +413,131 @@ document.addEventListener("DOMContentLoaded", function () {
         window.addEventListener("resize", scroller.resize);
     }
 
-    // 8. Basemap Toggle (Vector vs Satellite)
-    const toggleMapBtn = document.getElementById("btn-toggle-map");
-    if (toggleMapBtn) {
-        toggleMapBtn.addEventListener("click", function () {
-            isSatellite = !isSatellite;
-            if (isSatellite) {
-                toggleMapBtn.innerHTML = `🛰️ Satélite: Ativo`;
-                toggleMapBtn.classList.add("active");
-                
-                // Add ESRI Satellite raster source if not exists
-                if (!map.getSource("esri-satellite")) {
-                    map.addSource("esri-satellite", {
-                        type: "raster",
-                        tiles: [config.satelliteStyle],
-                        tileSize: 256
-                    });
-                }
-                if (!map.getLayer("esri-satellite-layer")) {
-                    map.addLayer({
-                        id: "esri-satellite-layer",
-                        type: "raster",
-                        source: "esri-satellite"
-                    }, "river-tracks");
-                }
-            } else {
-                toggleMapBtn.innerHTML = `🗺️ Mapa: Vetor`;
-                toggleMapBtn.classList.remove("active");
-                if (map.getLayer("esri-satellite-layer")) {
-                    map.removeLayer("esri-satellite-layer");
-                }
-            }
-        });
+    // 8. Basemap Satellite Helpers & Optional Website Toggle
+    function enableSatelliteMode() {
+        if (!map) return;
+        if (!map.getSource("esri-satellite")) {
+            map.addSource("esri-satellite", {
+                type: "raster",
+                tiles: [config.satelliteStyle || "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"],
+                tileSize: 256
+            });
+        }
+        if (!map.getLayer("esri-satellite-layer")) {
+            const beforeId = map.getLayer("river-tracks") ? "river-tracks" : undefined;
+            map.addLayer({
+                id: "esri-satellite-layer",
+                type: "raster",
+                source: "esri-satellite"
+            }, beforeId);
+        }
     }
 
-    // 9. Lightbox for Images
+    function disableSatelliteMode() {
+        if (map && map.getLayer("esri-satellite-layer")) {
+            map.removeLayer("esri-satellite-layer");
+        }
+    }
+
+    const toggleMapBtn = document.getElementById("btn-toggle-map");
+    if (toggleMapBtn) {
+        if (config.showMapToggle === true) {
+            toggleMapBtn.style.display = "inline-flex";
+            toggleMapBtn.innerHTML = isSatellite ? `🛰️ Satélite: Ativo` : `🗺️ Mapa: Vetor`;
+            if (isSatellite) toggleMapBtn.classList.add("active");
+
+            toggleMapBtn.addEventListener("click", function () {
+                isSatellite = !isSatellite;
+                if (isSatellite) {
+                    toggleMapBtn.innerHTML = `🛰️ Satélite: Ativo`;
+                    toggleMapBtn.classList.add("active");
+                    enableSatelliteMode();
+                } else {
+                    toggleMapBtn.innerHTML = `🗺️ Mapa: Vetor`;
+                    toggleMapBtn.classList.remove("active");
+                    disableSatelliteMode();
+                }
+            });
+        } else {
+            toggleMapBtn.style.display = "none";
+        }
+    }
+
+    // 9. Lightbox for Images & Videos
     const modal = document.getElementById("lightbox-modal");
     const modalImg = document.getElementById("lightbox-img");
+    const modalVideo = document.getElementById("lightbox-video");
     const modalCaption = document.getElementById("lightbox-caption");
     const modalClose = document.getElementById("lightbox-close");
 
+    function closeModal() {
+        if (!modal) return;
+        modal.classList.remove("open");
+        if (modalVideo) {
+            modalVideo.pause();
+            modalVideo.src = "";
+            modalVideo.style.display = "none";
+        }
+        if (modalImg) {
+            modalImg.src = "";
+            modalImg.style.display = "block";
+        }
+    }
+
     document.addEventListener("click", function (e) {
-        if (e.target.classList.contains("zoomable-img") || (e.target.tagName === "IMG" && e.target.closest(".notebook-gallery"))) {
+        // A) Video link clicked (e.g. [![Thumb](img)](video.mp4) or [Watch Video](video.mp4))
+        const videoLink = e.target.closest('a[href$=".mp4"], a[href$=".webm"], a[href$=".ogv"], a[href*=".ia.mp4"], a[href*="archive.org/download/"][href*=".mp4"], a[data-lightbox-video]');
+        if (videoLink) {
             e.preventDefault();
-            modalImg.src = e.target.src;
-            modalCaption.textContent = e.target.getAttribute("title") || e.target.getAttribute("alt") || "";
-            modal.classList.add("open");
+            const videoUrl = videoLink.getAttribute("data-lightbox-video") || videoLink.getAttribute("href");
+            const caption = videoLink.getAttribute("title") || 
+                            (videoLink.querySelector("img") && (videoLink.querySelector("img").getAttribute("alt") || videoLink.querySelector("img").getAttribute("title"))) || 
+                            videoLink.textContent.trim();
+
+            if (modalImg) modalImg.style.display = "none";
+            if (modalVideo) {
+                modalVideo.style.display = "block";
+                modalVideo.src = videoUrl;
+                modalVideo.play().catch(() => {});
+            }
+            if (modalCaption) modalCaption.textContent = caption || "";
+            if (modal) modal.classList.add("open");
+            return;
+        }
+
+        // B) Image clicked
+        if (e.target.classList.contains("zoomable-img") || (e.target.tagName === "IMG" && (e.target.closest(".notebook-gallery") || (e.target.closest(".card-text") && !e.target.closest("a"))))) {
+            e.preventDefault();
+            if (modalVideo) {
+                modalVideo.pause();
+                modalVideo.src = "";
+                modalVideo.style.display = "none";
+            }
+            if (modalImg) {
+                modalImg.style.display = "block";
+                modalImg.src = e.target.src;
+            }
+            if (modalCaption) modalCaption.textContent = e.target.getAttribute("title") || e.target.getAttribute("alt") || "";
+            if (modal) modal.classList.add("open");
         }
     });
 
     if (modalClose) {
-        modalClose.addEventListener("click", function () {
-            modal.classList.remove("open");
-        });
+        modalClose.addEventListener("click", closeModal);
     }
 
     if (modal) {
         modal.addEventListener("click", function (e) {
             if (e.target === modal) {
-                modal.classList.remove("open");
+                closeModal();
             }
         });
     }
+
+    // Close on Escape key
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && modal && modal.classList.contains("open")) {
+            closeModal();
+        }
+    });
 });

@@ -23,10 +23,10 @@ Você pode rodar um servidor HTTP simples na pasta do projeto:
 
 ```bash
 cd /home/felipe/public_html/projetos/mardascoisas-documental
-python3 -m http.server 8080
+python3 -m http.server 8000
 ```
 
-Abra no navegador em: `http://localhost:8080`
+Abra no navegador em: `http://localhost:8000`
 
 ---
 
@@ -49,7 +49,7 @@ Abra no navegador em: `http://localhost:8080`
 
 ## ✏️ Como Editar e Adicionar Capítulos
 
-Para adicionar ou editar pontos da narrativa, basta modificar o arquivo [`config.js`](config.js):
+Você pode usar o **Editor Visual** acessando `http://localhost:8080/editor.html` no navegador ou editar diretamente o arquivo [`config.js`](config.js):
 
 ```javascript
 {
@@ -63,9 +63,10 @@ Para adicionar ou editar pontos da narrativa, basta modificar o arquivo [`config
         pitch: 45.0,
         bearing: 30.0
     },
+    showMarkers: true, // true (padrão) ou false para centrar na coordenada sem exibir marcadores
     image: "assets/images/minha-foto.jpg",
     imageCaption: "Legenda da foto / Crédito",
-    description: "<p>Texto formatado em HTML...</p>"
+    description: "Texto formatado em **Markdown** (ou HTML).\n\n> Citações e destaques são suportados nativamente!"
 }
 ```
 

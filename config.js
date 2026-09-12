@@ -6,10 +6,10 @@ var config = {
     "markerColor": "#0ea5e9",
     "theme": "light",
     "use3dTerrain": false,
-    "title": "Mar das Coisas 2026",
-    "subtitle": "Arte, Ciência Cidadã, Tecnologias Livres e Águas em Ubatuba",
-    "byline": "Tropixel · LACO / IOUSP · Ubatuba Ciências Culturas (/U.CC/)",
-    "date": "30 de julho a 1º de agosto de 2026 · Ubatuba, SP",
+    "title": "Mar das Coisas - Tropixel",
+    "subtitle": "Encontro de arte-ciência oceânica sobre água, poluição e lixo em Ubatuba e região.",
+    "byline": "LACO (IOUSP) + /U.CC/",
+    "date": "30/07 a 01/08 de 2026 · Ubatuba, SP",
     "footer": "Documentação aberta publicada sob licença Creative Commons Atribuição 4.0 Internacional (CC BY 4.0).",
     "archiveUrl": "https://archive.org/details/mar-das-coisas-2026-ubatuba-doutor-f",
     "wikiUrl": "https://fonte.wiki/projetos/mardascoisas",
@@ -18,46 +18,48 @@ var config = {
             "id": "intro-capa",
             "alignment": "center",
             "hidden": false,
-            "title": "Mar das Coisas",
-            "badge": "Abertura & Território",
+            "title": "",
+            "badge": "Ciclo Tropixel: Mar das Coisas 2026",
             "location": {
                 "center": [
-                    -45.06423,
-                    -23.436236
+                    -45.187763,
+                    -23.445711
                 ],
-                "zoom": 11,
-                "pitch": 30,
+                "zoom": 11.5,
+                "pitch": 0,
                 "bearing": 0
             },
             "mapAnimation": "flyTo",
             "image": "assets/images/4807648_karuvadgraphy.jpg",
-            "imageCaption": "Tropixel Mar das Coisas - 2026",
-            "description": "<p>O <strong>Mar das Coisas 2026</strong> reuniu em Ubatuba cientistas, artistas, profissionais da educação, ativistas socioambientais e residentes da região entre 30 de julho e 1º de agosto de 2026. O encontro articulou ecologias marinhas, monitoramento comunitário de águas, bioacústica, arte-ciência cidadã e memórias territoriais.</p>\n            <p>Esta narrativa cartográfica percorre os três dias de imersão: das bancadas e tanques do laboratório oceanográfico às margens dos rios e manguezais urbanos, além da coleta de descobertas e informações para a construção coletiva da <em>Carta-Manifesto Mar das Coisas</em>.</p>"
+            "imageCaption": "Mar das Coisas - 2026",
+            "description": "[Mar das Coisas](https://mardascoisas.tropixel.org/) foi um encontro realizado em Ubatuba - litoral norte de SP - entre 30 de julho e 1º de agosto de 2026. Uma parceria entre o [LACO / IOUSP](https://lacoiousp.wordpress.com/) e a agência [/U.CC/](https://ubatuba.cc), o evento reuniu cientistas, artistas, estudantes, ativistas e residentes da região para debates, experimentações metodológicas e outras atividades focadas na relação entre ciência, cultura, tecnologias abertas, e dinâmicas costeiras e hídricas do território.\n\nUm dos propósitos centrais do Mar das Coisas foi promover a conscientização crítica sobre o nexo *lixo - poluição - contaminação* em corpos hídricos, e a busca de maneiras de abordar essas questões.",
+            "showMarkers": false
         },
         {
             "id": "dia-30-laco",
-            "alignment": "left",
+            "alignment": "right",
             "hidden": false,
             "title": "30/07 · Chegada e Laboratórios no LACO",
             "badge": "Dia 1 · Início dos Trabalhos",
             "location": {
                 "center": [
-                    -45.118891,
-                    -23.499909
+                    -45.118952,
+                    -23.501042
                 ],
-                "zoom": 15.8,
-                "pitch": 52,
-                "bearing": 38
+                "zoom": 16.6,
+                "pitch": 56,
+                "bearing": 117
             },
             "mapAnimation": "flyTo",
-            "image": "assets/images/f_20260730_20260730_094051.jpg",
-            "imageCaption": "Chegada à Base de Pesquisa Clarimundo de Jesus (IOUSP), Praia do Lamberto. Foto: Doutor F / CC BY 4.0",
+            "image": "assets/images/f_20260730_20260730_120254.jpg",
+            "imageCaption": "Vista da Praia do Lamberto. Foto: Doutor F / CC BY 4.0",
             "videoArchiveId": "20260730_121757",
-            "description": "<p>Dia de início na <strong>Base de Pesquisa Clarimundo de Jesus</strong> do Instituto Oceanográfico da USP (IOUSP), na Praia do Lamberto. As atividades iniciaram no <strong>LACO (Laboratório de Arte e Ciência Oceânica)</strong> com a abertura institucional conduzida por Fabiane M. Borges (LACO/ IOUSP), Alexander Turra (IOUSP e Cátedra UNESCO para a Sustentabilidade do Oceano), Rubens Lopes (LAPS IOUSP) e Felipe S. Fonseca (/U.CC/).</p>\n            <div class=\"callout-box\">\n                <strong>Atividades do Dia:</strong>\n                <ul>\n                    <li>Visita guiada a laboratórios do IOUSP.</li>\n                    <li>Mesa <em>Água, Resíduos e Contaminação: Experiências no Território</em> com APAMLN, Instituto Argonauta e GERCO/SMA.</li>\n                    <li>Mergulho de descontaminação: Discussão aberta sobre resíduos sólidos, contaminação, saneamento, circulação de materiais, redes de monitoramento e possibilidades de cooperação entre iniciativas locais.</li>\n                </ul>\n            </div>"
+            "description": "Dia de início do Mar das Coisas na **Base de Pesquisa Clarimundo de Jesus** do Instituto Oceanográfico da USP (IOUSP), na Praia do Lamberto. Aquele é um lugar emblemático: atualmente, a Base do IO é a única presença de uma universidade pública na cidade de Ubatuba.\n\n[![Vídeo: abrindo os portões do IO](assets/images/f_20260730_20260730_094051.jpg)](https://archive.org/download/mar-das-coisas-2026-ubatuba-doutor-f/f_20260730_20260730_094122.ia.mp4)\n\n*Abrindo os portões do IO (vídeo)*\n\nAs atividades foram iniciadas no LACO (Laboratório de Arte e Ciência Oceânica) com a abertura institucional conduzida por Fabiane M. Borges (LACO/ IOUSP), seguida das apresentações remotas de Alexander Turra (IOUSP e Cátedra UNESCO para a Sustentabilidade do Oceano) e Rubens Lopes (LAPS IOUSP). Doutor F (/U.CC/) contextualizou o encontro no âmbito da rede Tropixel e outras iniciativas de Ubatuba.\n\n[![Video: Microscópio](assets/images/20260730-micro.png)](https://archive.org/download/mar-das-coisas-2026-ubatuba-doutor-f/f_20260730_20260730_120545.ia.mp4)\n\n*Visita ao LAPS (vídeo)*\n\n## Atividades do Dia:\n\n* Visita guiada a laboratórios do IOUSP.\n* Mesa *Água, Resíduos e Contaminação: Experiências no Território* com APAMLN, Instituto Argonauta e GERCO/SMA.\n* Mergulho de descontaminação: discussão aberta sobre resíduos sólidos, contaminação, saneamento, circulação de materiais, redes de monitoramento e possibilidades de cooperação entre iniciativas locais.\n\n[![Video: Coral Sol](assets/images/20260730-lab.png)](https://archive.org/download/mar-das-coisas-2026-ubatuba-doutor-f/f_20260730_20260730_121216.ia.mp4)\n\n*Corais-sol, espécie invasora na costa brasileira (vídeo)*\n\n## Registros do dia\n\nDocumentação completa das atividades do dia disponível na [fonte.wiki](https://mardascoisas.tropixel.org/30-jul-laco/).",
+            "showMarkers": true
         },
         {
             "id": "dia-31-cartas",
-            "alignment": "right",
+            "alignment": "left",
             "hidden": false,
             "title": "31/07 · Cartas Climáticas & Materialidades da Água",
             "badge": "Dia 2 · Criação & Imaginação",
@@ -66,38 +68,40 @@ var config = {
                     -45.118639,
                     -23.5
                 ],
-                "zoom": 16.6,
-                "pitch": 42,
-                "bearing": -25
+                "zoom": 19,
+                "pitch": 65,
+                "bearing": -29
             },
             "mapAnimation": "flyTo",
             "image": "assets/images/f_20260731_20260731_105944.jpg",
             "imageCaption": "Roda ao ar livre com o baralho de cartas de ficção e futuros climáticos. Foto: Doutor F / CC BY 4.0",
-            "description": "<p>O segundo dia combinou fabulação especulativa à beira-mar e debates conceituais no LACO.</p>\n            <p>Pela manhã, <strong>Fabiane M. Borges</strong> conduziu a dinâmica das <em>Cartas Climáticas</em>. Em pequenos grupos e em ambiente aberto, participantes elaboraram narrativas, mitologias e cenários futuros cruzando dados ambientais e memórias locais.</p>\n            <p>À tarde, apresentações sobre <em>Arte, Ciência e Infraestruturas Hídricas</em> com Malu Hatoum (UFF), Mariana Vilela, Teresa Dillon (Repair Acts / Univ. de Southampton) e Diana Zatz. Expositoras e participantes debateram tecnologias de reparo, contaminações invisíveis e materialidades da água.</p>"
+            "description": "O segundo dia combinou fabulação especulativa à beira-mar e debates conceituais no LACO.\n\n![Cartas Climáticas](assets/images/f_20260731_20260731_101441.jpg)\n\nPela manhã, Fabiane M. Borges conduziu a dinâmica das *Cartas Climáticas<*. Em pequenos grupos e em ambiente aberto, participantes elaboraram narrativas, mitologias e cenários futuros cruzando dados ambientais e memórias locais.\n\n<video controls playsinline preload=\"metadata\">\n    <source src=\"https://archive.org/download/mar-das-coisas-2026-ubatuba-doutor-f/f_20260731_20260731_111821.ia.mp4\" type=\"video/mp4\">\n    Seu navegador não suporta reprodução de vídeo.\n</video>\n\n![Apresentação na praia](assets/images/f_20260731_20260731_115224.jpg)\n\nÀ tarde, aconteceram apresentações das obras expostas e debates sobre <em>Arte, Ciência e Infraestruturas Hídricas</em> com Malu Hatoum (UFF), Mariana Vilela, Teresa Dillon (Repair Acts / Univ. de Southampton), Diana Zatz e Arjon Dunnewind (IMPAKT).\n\n![Abraço vegetal](assets/images/f_20260731_20260731_140509.jpg)\n\n![Debates](assets/images/f_20260731_20260731_154317.jpg)\n\n## Registros do dia\n\nDocumentação completa das atividades do dia disponível na [fonte.wiki](https://mardascoisas.tropixel.org/31-jul/).",
+            "showMarkers": true
         },
         {
             "id": "dia-01-bacias",
-            "alignment": "left",
+            "alignment": "center",
             "hidden": false,
             "title": "01/08 (Manhã) · Contato com as Bacias",
             "badge": "Dia 3 · Saída de Campo",
             "location": {
                 "center": [
-                    -45.054871,
-                    -23.458492
+                    -45.064531,
+                    -23.449328
                 ],
-                "zoom": 15.4,
-                "pitch": 58,
-                "bearing": 0
+                "zoom": 13.3,
+                "pitch": 65,
+                "bearing": 57
             },
             "mapAnimation": "flyTo",
             "image": "assets/images/f_bacia_acarau_20260801_103321.jpg",
             "imageCaption": "Observação na foz do Rio Acaraú. Foto: Doutor F / CC BY 4.0",
-            "description": "<p>Expedição auto-organizada pelas bacias hidrográficas urbanas de Ubatuba, percorrendo os rios <strong>Acaraú</strong>, <strong>Tavares</strong> e <strong>Rio Grande</strong>.</p>\n            <p>Os grupos documentaram pontos de canalização urbana, descarte de resíduos, matas ciliares remanescentes e zonas de transição entre o rio e o manguezal.</p>\n            <p>No trajeto, uma gravação espontânea da <em>Rádio Mar das Coisas</em> capturou depoimentos e impressões de participantes em tempo real.</p>"
+            "description": "Após os dois dias de debates e elaboração no LACO, o sábado (01/08) foi mais de observação em campo e mãos na massa. O dia começou com visitas a diferentes pontos de Ubatuba para realizar observações de corpos hídricos e reflexões sobre bacias hidrográficas.\n\nOs grupos de participantes documentaram pontos de canalização urbana, descarte de resíduos, matas ciliares remanescentes e zonas de transição entre o rio e o manguezal.\n\nUma gravação espontânea da <em>Rádio Mar das Coisas</em> capturou depoimentos e impressões de participantes em tempo real.\n\nhttps://archive.org/download/radio-mar-das-coisas-01/radio-mar-das-coisas.mp3",
+            "showMarkers": true
         },
         {
             "id": "dia-01-barcas",
-            "alignment": "left",
+            "alignment": "right",
             "hidden": false,
             "title": "01/08 (Tarde) · Oficina BARCAS Regenerativas",
             "badge": "Metodologia & Matrizes",
@@ -106,34 +110,15 @@ var config = {
                     -45.074442,
                     -23.431556
                 ],
-                "zoom": 16.4,
-                "pitch": 40,
-                "bearing": -12
+                "zoom": 17.3,
+                "pitch": 0,
+                "bearing": -2
             },
             "mapAnimation": "flyTo",
-            "image": "assets/images/f_barcas_20260801_165143.jpg",
+            "image": "https://fonte.wiki/projetos/mardascoisas/registros/f_barcas_20260801_144722.jpg",
             "imageCaption": "Construção de matrizes de regeneração na Casa de Saúde Cultura Viva. Foto: Doutor F / CC BY 4.0",
-            "description": "<p>À tarde, o grupo reuniu-se na <strong>Casa de Saúde Cultura Viva</strong> para a oficina facilitada por <strong>Floriana Breyer</strong> (Biodiversas Lab).</p>\n            <p>Através da metodologia <strong>BARCAS</strong> (<em>Bússola Exploradora da Regeneração Cultural, Ambiental e Social</em>), foram mapeadas matrizes territoriais de vulnerabilidade e potencialidade, articulando propostas de cooperação entre projetos locais e redes de pesquisa.</p>"
-        },
-        {
-            "id": "caderno-anotacoes",
-            "alignment": "right",
-            "hidden": false,
-            "title": "Caderno de Bordo & Fac-símiles",
-            "badge": "Memória Manuscrita",
-            "location": {
-                "center": [
-                    -45.062623,
-                    -23.442279
-                ],
-                "zoom": 12,
-                "pitch": 35,
-                "bearing": 0
-            },
-            "mapAnimation": "flyTo",
-            "image": "assets/images/f_caderno_1.jpg",
-            "imageCaption": "Fac-símile do caderno de campo: esquemas, dados de gestão e anotações. Foto: Doutor F / CC BY 4.0",
-            "description": "<p>A memória gráfica do encontro foi registrada em diversas formas, incluindo imagens, cadernos, vídeos e áudio.</p>\n            <div class=\"notebook-gallery\">\n                <a href=\"assets/images/f_caderno_1.jpg\" target=\"_blank\"><img src=\"assets/images/f_caderno_1.jpg\" alt=\"Pág 1\" title=\"Página 1: Abertura\"/></a>\n                <a href=\"assets/images/f_caderno_2.jpg\" target=\"_blank\"><img src=\"assets/images/f_caderno_2.jpg\" alt=\"Pág 2\" title=\"Página 2: Gestão hídrica\"/></a>\n                <a href=\"assets/images/f_caderno_3.jpg\" target=\"_blank\"><img src=\"assets/images/f_caderno_3.jpg\" alt=\"Pág 3\" title=\"Página 3: Fabulações\"/></a>\n                <a href=\"assets/images/f_caderno_4.jpg\" target=\"_blank\"><img src=\"assets/images/f_caderno_4.jpg\" alt=\"Pág 4\" title=\"Página 4: Rios\"/></a>\n                <a href=\"assets/images/f_caderno_5.jpg\" target=\"_blank\"><img src=\"assets/images/f_caderno_5.jpg\" alt=\"Pág 5\" title=\"Página 5: BARCAS\"/></a>\n                <a href=\"assets/images/f_caderno_6.jpg\" target=\"_blank\"><img src=\"assets/images/f_caderno_6.jpg\" alt=\"Pág 6\" title=\"Página 6: Encaminhamentos\"/></a>\n            </div>"
+            "description": "<p>À tarde, o grupo reuniu-se na <strong>Casa de Saúde Cultura Viva</strong> para a oficina facilitada por <strong>Floriana Breyer</strong> (Biodiversas Lab).</p>\n            <p>Através da metodologia <strong>BARCAS</strong> (<em>Bússola Exploradora da Regeneração Cultural, Ambiental e Social</em>), foram mapeadas matrizes territoriais de vulnerabilidade e potencialidade, articulando propostas de cooperação entre projetos locais e redes de pesquisa.</p>",
+            "showMarkers": true
         },
         {
             "id": "manifesto-encerramento",
@@ -146,18 +131,19 @@ var config = {
                     -45.075,
                     -23.46
                 ],
-                "zoom": 12.2,
-                "pitch": 20,
-                "bearing": 0
+                "zoom": 10.8,
+                "pitch": 65,
+                "bearing": -81
             },
             "mapAnimation": "flyTo",
             "image": "assets/images/bernardo_20260801_153306.jpg",
             "imageCaption": "Participantes da oficina BARCAS Regenerativas.",
-            "description": "<p>A plenária de encerramento consolidou as bases para a <strong>Carta-Manifesto Mar das Coisas</strong>, reafirmando o compromisso com o acesso livre ao conhecimento, a defesa dos bens comuns hídricos e o fortalecimento de tecnologias apropriadas ao litoral.</p>\n            <div class=\"callout-box accent\">\n                <strong>Acervo e Acesso Aberto:</strong>\n                <ul>\n                    <li>🎥 <strong>Internet Archive:</strong> <a href=\"https://archive.org/details/mar-das-coisas-2026-ubatuba-doutor-f\" target=\"_blank\" rel=\"noopener\">17 vídeos e gravações originais em domínio público</a>.</li>\n                    <li>📖 <strong>fonte.wiki:</strong> <a href=\"https://fonte.wiki/projetos/mardascoisas\" target=\"_blank\" rel=\"noopener\">Documentação textual completa e transcrições</a>.</li>\n                    <li>🌐 <strong>Código e Mapas:</strong> Repositório estático disponível para GitHub Pages sob CC BY 4.0.</li>\n                </ul>\n            </div>"
+            "description": "<p>A plenária de encerramento consolidou as bases para a <strong>Carta-Manifesto Mar das Coisas</strong>, reafirmando o compromisso com o acesso livre ao conhecimento, a defesa dos bens comuns hídricos e o fortalecimento de tecnologias apropriadas ao litoral.</p>\n            <div class=\"callout-box accent\">\n                <strong>Acervo e Acesso Aberto:</strong>\n                <ul>\n                    <li>🎥 <strong>Internet Archive:</strong> <a href=\"https://archive.org/details/mar-das-coisas-2026-ubatuba-doutor-f\" target=\"_blank\" rel=\"noopener\">Vídeos originais no Internet Archive</a>.</li>\n                    <li>📖 <strong>fonte.wiki:</strong> <a href=\"https://fonte.wiki/projetos/mardascoisas\" target=\"_blank\" rel=\"noopener\">Documentação textual completa e transcrições</a>.</li>\n                    <li>🌐 <strong>Código e Mapas:</strong> Repositório estático disponível para GitHub Pages sob CC BY 4.0.</li>\n                </ul>\n            </div>",
+            "showMarkers": true
         },
         {
             "id": "institucional",
-            "alignment": "right",
+            "alignment": "center",
             "title": "Realização",
             "badge": "Realização",
             "location": {
@@ -171,7 +157,10 @@ var config = {
             },
             "image": "assets/images/logos-todos.png",
             "imageCaption": "Organizações apoiadoras",
-            "description": "<p>Organizações apoiadoras da primeira edição do Mar das Coisas, em 2026.</p>"
+            "description": "<p>Organizações apoiadoras da primeira edição do Mar das Coisas, em 2026.</p>",
+            "showMarkers": true
         }
-    ]
+    ],
+    "defaultBasemap": "vector",
+    "showMapToggle": false
 };

@@ -17,6 +17,9 @@
     <!-- Base Configuration -->
     <script src="config.js"></script>
 
+    <!-- Marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
     <style>
         :root {
             --bg-main: #0f172a;
@@ -34,14 +37,22 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
+        html, body {
+            width: 100%;
+            max-width: 100vw;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+
         body {
             font-family: "Inter", sans-serif;
             background: var(--bg-main);
             color: var(--text);
-            height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
         }
 
         /* Top Header */
@@ -52,16 +63,24 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
+            padding: 0 16px;
             z-index: 10;
+            width: 100%;
+            max-width: 100vw;
+            box-sizing: border-box;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: none;
         }
+        header::-webkit-scrollbar { display: none; }
 
         .header-title {
-            font-size: 1.05rem;
+            font-size: 1.0rem;
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            flex-shrink: 0;
         }
 
         .header-badge {
@@ -71,28 +90,32 @@
             padding: 3px 8px;
             border-radius: 4px;
             border: 1px solid rgba(56, 189, 248, 0.3);
+            white-space: nowrap;
         }
 
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 6px;
+            flex-shrink: 0;
         }
 
         .btn {
             background: #334155;
             color: #fff;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 7px 14px;
+            padding: 6px 11px;
             border-radius: 6px;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             font-weight: 500;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             transition: all 0.15s ease;
             text-decoration: none;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .btn:hover { background: #475569; }
@@ -105,9 +128,12 @@
         .workspace {
             flex: 1;
             display: grid;
-            grid-template-columns: 280px 1fr 1fr;
+            grid-template-columns: 280px minmax(0, 1fr) minmax(0, 1.2fr);
             height: calc(100vh - 56px);
+            width: 100%;
+            max-width: 100vw;
             overflow: hidden;
+            min-width: 0;
         }
 
         /* 1. Sidebar: Chapter List */
@@ -196,8 +222,13 @@
         .editor-form-pane {
             background: var(--bg-main);
             overflow-y: auto;
+            overflow-x: hidden;
             padding: 24px;
             border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            box-sizing: border-box;
         }
 
         .form-section {
@@ -206,6 +237,8 @@
             padding: 18px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
+            min-width: 0;
+            box-sizing: border-box;
         }
 
         .section-title {
@@ -220,6 +253,8 @@
 
         .form-group {
             margin-bottom: 14px;
+            min-width: 0;
+            box-sizing: border-box;
         }
 
         .form-group:last-child { margin-bottom: 0; }
@@ -228,12 +263,16 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
+            min-width: 0;
+            box-sizing: border-box;
         }
 
         .form-row-3 {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 10px;
+            min-width: 0;
+            box-sizing: border-box;
         }
 
         label {
@@ -246,6 +285,8 @@
 
         input[type="text"], input[type="number"], select, textarea {
             width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
             background: var(--bg-input);
             border: 1px solid var(--border-color);
             color: #fff;
@@ -272,6 +313,7 @@
 
         .toolbar-mini {
             display: flex;
+            flex-wrap: wrap;
             gap: 6px;
             margin-bottom: 6px;
         }
@@ -288,6 +330,113 @@
 
         .tool-btn-mini:hover { background: #475569; color: #fff; }
 
+        /* Editor Tabs */
+        .editor-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 6px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.15s ease;
+        }
+
+        .tab-btn:hover {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab-btn.active {
+            background: var(--bg-input);
+            color: var(--accent);
+            border-color: var(--border-color);
+        }
+
+        .markdown-preview {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 14px;
+            min-height: 180px;
+            max-height: 320px;
+            overflow-y: auto;
+            font-size: 0.92rem;
+            line-height: 1.6;
+            color: #cbd5e1;
+        }
+
+        .markdown-preview p { margin-bottom: 10px; }
+        .markdown-preview p:last-child { margin-bottom: 0; }
+        .markdown-preview strong { color: #fff; }
+        .markdown-preview a { color: var(--accent); text-decoration: underline; }
+        .markdown-preview blockquote {
+            background: rgba(30, 41, 59, 0.7);
+            border-left: 3px solid var(--accent);
+            padding: 8px 12px;
+            margin: 10px 0;
+            border-radius: 0 4px 4px 0;
+            color: #e2e8f0;
+        }
+        .markdown-preview blockquote p:last-child { margin-bottom: 0; }
+        .markdown-preview ul, .markdown-preview ol { margin: 8px 0 10px 18px; }
+        .markdown-preview li { margin-bottom: 4px; }
+        .markdown-preview h3 { font-size: 1.1rem; color: #fff; margin: 12px 0 6px 0; }
+        .markdown-preview h4 { font-size: 1.0rem; color: var(--accent); margin: 10px 0 4px 0; }
+        .markdown-preview hr { border: none; border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 12px 0; }
+        .markdown-preview code {
+            font-family: "IBM Plex Mono", monospace;
+            background: rgba(15, 23, 42, 0.8);
+            color: var(--accent);
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+        .markdown-preview video {
+            width: 100%;
+            max-height: 240px;
+            border-radius: 6px;
+            margin: 10px 0;
+            background: #000;
+            display: block;
+            border: 1px solid var(--border-color);
+        }
+
+        .markdown-preview img {
+            max-width: 100%;
+            width: 100%;
+            height: auto;
+            max-height: 240px;
+            border-radius: 6px;
+            margin: 10px 0;
+            display: block;
+            border: 1px solid var(--border-color);
+            object-fit: cover;
+        }
+
+        .markdown-preview a:has(img) {
+            display: block;
+            position: relative;
+            max-width: 100%;
+            margin: 10px 0;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .markdown-preview a:has(img) img {
+            margin: 0;
+        }
+
         .image-preview {
             margin-top: 10px;
             max-height: 140px;
@@ -297,12 +446,80 @@
             display: none;
         }
 
+        /* Sidebar Mode Tabs */
+        .sidebar-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: #0b1120;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-tab {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 10px 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.15s ease;
+            text-align: center;
+        }
+
+        .sidebar-tab:hover {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-tab.active {
+            color: var(--accent);
+            background: var(--bg-panel);
+            border-bottom-color: var(--accent);
+        }
+
+        /* GeoJSON Markers on Map */
+        .active-geojson-pin {
+            cursor: grab !important;
+            z-index: 100 !important;
+            filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.95)) drop-shadow(0 0 18px rgba(16, 185, 129, 0.6));
+            transition: filter 0.2s ease;
+        }
+
+        .active-geojson-pin:active {
+            cursor: grabbing !important;
+        }
+
+        .geojson-other-marker {
+            cursor: pointer;
+            z-index: 15;
+            padding: 6px;
+        }
+
+        .geojson-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: #f59e0b;
+            border: 2.5px solid #ffffff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), 0 0 8px rgba(245, 158, 11, 0.7);
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .geojson-other-marker:hover .geojson-dot {
+            transform: scale(1.4);
+            background-color: #fbbf24;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6), 0 0 14px #f59e0b;
+        }
+
         /* 3. Right: Interactive Map Preview & Coordinate Picker */
         .map-pane {
             position: relative;
             background: #000;
             display: flex;
             flex-direction: column;
+            min-width: 0;
+            overflow: hidden;
         }
 
         #editor-map {
@@ -463,10 +680,12 @@
         </div>
         <div class="header-actions">
             <button id="btn-project-meta" class="btn" title="Editar título, subtítulo, links e rodapé">⚙️ Metadados</button>
-            <button id="btn-reset-config" class="btn" title="Descarta alterações locais e recarrega do config.js original">🔄 Recarregar config.js</button>
-            <button id="btn-save-draft" class="btn" title="Salva no navegador">💾 Salvar Rascunho</button>
-            <button id="btn-show-code" class="btn btn-primary">📋 Ver / Copiar config.js</button>
-            <button id="btn-download-config" class="btn btn-success">📥 Baixar config.js</button>
+            <button id="btn-reset-config" class="btn" title="Descarta alterações locais e recarrega dados originais">🔄 Recarregar</button>
+            <button id="btn-save-draft" class="btn" title="Salva rascunho no navegador">💾 Salvar</button>
+            <button id="btn-show-code" class="btn btn-primary" title="Ver e copiar código do config.js">📋 config.js</button>
+            <button id="btn-show-geojson" class="btn btn-primary" style="background: #0d9488; border-color: #14b8a6;" title="Ver e copiar locations.geojson">📍 GeoJSON</button>
+            <button id="btn-download-config" class="btn btn-success" title="Baixar arquivo config.js">📥 config.js</button>
+            <button id="btn-download-geojson" class="btn btn-success" style="background: #059669;" title="Baixar locations.geojson atualizado">📥 GeoJSON</button>
             <a href="index.html" target="_blank" class="btn" title="Abrir história em nova aba">👁️ Ver História</a>
         </div>
     </header>
@@ -476,16 +695,38 @@
         
         <!-- 1. Sidebar -->
         <aside class="sidebar">
-            <div class="sidebar-header">
-                <span class="sidebar-title">Capítulos</span>
-                <button id="btn-add-chapter" class="btn btn-primary" style="padding: 4px 8px; font-size: 0.78rem;">+ Novo</button>
+            <div class="sidebar-tabs">
+                <button id="tab-nav-chapters" class="sidebar-tab active">📖 Capítulos (<span id="count-chapters">0</span>)</button>
+                <button id="tab-nav-geojson" class="sidebar-tab">📍 Pontos GeoJSON (<span id="count-geojson">0</span>)</button>
             </div>
-            <div class="chapter-list" id="chapter-list">
-                <!-- Injected via JS -->
+            
+            <!-- 1a. Chapters List View -->
+            <div id="sidebar-chapters-view" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
+                <div class="sidebar-header">
+                    <span class="sidebar-title">Capítulos</span>
+                    <button id="btn-add-chapter" class="btn btn-primary" style="padding: 4px 8px; font-size: 0.78rem;">+ Novo</button>
+                </div>
+                <div class="chapter-list" id="chapter-list">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+
+            <!-- 1b. GeoJSON Points List View -->
+            <div id="sidebar-geojson-view" style="display: none; flex-direction: column; flex: 1; overflow: hidden;">
+                <div class="sidebar-header">
+                    <span class="sidebar-title">Pontos de Interesse</span>
+                    <div style="display: flex; gap: 4px;">
+                        <button id="btn-reset-geojson" class="btn btn-secondary" style="padding: 4px 6px; font-size: 0.72rem;" title="Recarregar do arquivo locations.geojson original">🔄</button>
+                        <button id="btn-add-geojson-point" class="btn btn-primary" style="padding: 4px 8px; font-size: 0.78rem;">+ Novo Ponto</button>
+                    </div>
+                </div>
+                <div class="chapter-list" id="geojson-point-list">
+                    <!-- Injected via JS -->
+                </div>
             </div>
         </aside>
 
-        <!-- 2. Form Editor -->
+        <!-- 2a. Form Editor: Chapter -->
         <main class="editor-form-pane" id="editor-form-pane">
             
             <div class="form-section">
@@ -565,26 +806,109 @@
                         <input type="range" min="-180" max="180" step="1" id="range-bearing">
                     </div>
                 </div>
+
+                <div class="form-group" style="margin-top: 12px;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; text-transform: none; font-size: 0.82rem; font-weight: normal; color: var(--text);">
+                        <input type="checkbox" id="check-show-markers" checked style="width: 16px; height: 16px; cursor: pointer;">
+                        Exibir marcadores no mapa durante este capítulo
+                    </label>
+                </div>
             </div>
 
             <!-- Description / Text -->
             <div class="form-section">
-                <div class="section-title">📄 Texto da Narrativa (HTML)</div>
+                <div class="section-title">📄 Texto da Narrativa (Markdown)</div>
                 
-                <div class="toolbar-mini">
-                    <button class="tool-btn-mini" onclick="insertTag('p')">&lt;p&gt;</button>
-                    <button class="tool-btn-mini" onclick="insertTag('strong')">&lt;strong&gt;</button>
-                    <button class="tool-btn-mini" onclick="insertTag('em')">&lt;em&gt;</button>
-                    <button class="tool-btn-mini" onclick="insertTag('a')">&lt;a link&gt;</button>
-                    <button class="tool-btn-mini" onclick="insertCallout()">Destaque (Callout)</button>
-                    <button class="tool-btn-mini" onclick="insertList()">Lista &lt;ul&gt;</button>
+                <div class="editor-tabs">
+                    <button type="button" class="tab-btn active" id="tab-write" onclick="switchTab('write')">✏️ Escrever (Markdown)</button>
+                    <button type="button" class="tab-btn" id="tab-preview" onclick="switchTab('preview')">👁️ Prévia Formatada</button>
                 </div>
 
-                <textarea id="input-description" placeholder="<p>Texto do capítulo...</p>"></textarea>
+                <div class="toolbar-mini" id="markdown-toolbar">
+                    <button class="tool-btn-mini" type="button" onclick="insertMd('bold')" title="Negrito"><strong>B</strong></button>
+                    <button class="tool-btn-mini" type="button" onclick="insertMd('italic')" title="Itálico"><em>I</em></button>
+                    <button class="tool-btn-mini" type="button" onclick="insertMd('heading')" title="Subtítulo">H3</button>
+                    <button class="tool-btn-mini" type="button" onclick="insertMd('link')" title="Link">[Link]</button>
+                    <button class="tool-btn-mini" type="button" onclick="insertMd('quote')" title="Citação ou destaque">&gt; Citação</button>
+                    <button class="tool-btn-mini" type="button" onclick="insertMd('list')" title="Lista">• Lista</button>
+                    <button class="tool-btn-mini" type="button" onclick="insertCallout()" title="Caixa de Destaque">Destaque Box</button>
+                    <button class="tool-btn-mini" type="button" onclick="insertVideoLightbox()" title="Inserir Foto vinculada ao Lightbox de Vídeo">🎬 Foto+Vídeo Lightbox</button>
+                    <button class="tool-btn-mini" type="button" onclick="insertVideo()" title="Inserir Player de Vídeo HTML nativo">▶️ Player HTML</button>
+                </div>
+
+                <textarea id="input-description" placeholder="Escreva a narrativa do capítulo em Markdown (parágrafos simples, **negrito**, *itálico*, links)..."></textarea>
+                <div id="preview-description" class="markdown-preview" style="display: none;"></div>
             </div>
 
             <div style="display: flex; justify-content: space-between; margin-top: 10px;">
                 <button id="btn-delete-chapter" class="btn btn-danger">🗑️ Excluir este Capítulo</button>
+            </div>
+
+        </main>
+
+        <!-- 2b. Form Editor: GeoJSON Point -->
+        <main class="editor-form-pane" id="geojson-form-pane" style="display: none;">
+            
+            <div class="form-section">
+                <div class="section-title">📍 Informações do Ponto de Interesse (GeoJSON)</div>
+                
+                <div class="form-group">
+                    <label>Título do Ponto</label>
+                    <input type="text" id="geo-input-title" placeholder="Ex: Base Oceanográfica IOUSP / LACO">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>ID do Ponto</label>
+                        <input type="text" id="geo-input-id" placeholder="dia-30-laco">
+                    </div>
+                    <div class="form-group">
+                        <label>Categoria</label>
+                        <input type="text" id="geo-input-category" placeholder="Ex: laboratorio, rio, ar-livre, oficina">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>📖 Capítulo Vinculado no Relato (Gera botão no balão do mapa)</label>
+                    <select id="geo-input-chapter" style="width: 100%; padding: 8px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); font-size: 0.85rem;">
+                        <option value="">(Nenhum capítulo vinculado)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Data Relacionada (Opcional)</label>
+                    <input type="text" id="geo-input-date" placeholder="Ex: 2026-07-30">
+                </div>
+            </div>
+
+            <!-- Location Section -->
+            <div class="form-section">
+                <div class="section-title">📍 Coordenadas Geográficas</div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Longitude</label>
+                        <input type="number" step="0.000001" id="geo-input-lon">
+                    </div>
+                    <div class="form-group">
+                        <label>Latitude</label>
+                        <input type="number" step="0.000001" id="geo-input-lat">
+                    </div>
+                </div>
+
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">
+                    💡 <em>Você pode arrastar o marcador verde no mapa ou clicar diretamente em qualquer ponto do mapa para mover este ponto de interesse!</em>
+                </div>
+            </div>
+
+            <!-- Description / Text -->
+            <div class="form-section">
+                <div class="section-title">📄 Descrição / Texto do Balão (Popup)</div>
+                <textarea id="geo-input-description" placeholder="Texto curto que aparece no balão ao clicar no marcador do mapa..." style="min-height: 100px;"></textarea>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                <button id="btn-delete-geojson-point" class="btn btn-danger">🗑️ Excluir este Ponto GeoJSON</button>
             </div>
 
         </main>
@@ -641,15 +965,32 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Cor do Marcador</label>
-                        <input type="text" id="meta-markerColor" placeholder="#0ea5e9">
+                        <label>Camada Base do Mapa</label>
+                        <select id="meta-basemap">
+                            <option value="vector">🗺️ Vetor (Carto Voyager - Padrão)</option>
+                            <option value="satellite">🛰️ Satélite (ESRI World Imagery)</option>
+                            <option value="dark">🌙 Vetor Escuro (Carto Dark Matter)</option>
+                            <option value="light">☀️ Vetor Claro (Carto Positron)</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label>Tema</label>
+                        <label>Tema dos Cartões</label>
                         <select id="meta-theme">
                             <option value="dark">Escuro (Dark)</option>
                             <option value="light">Claro (Light)</option>
                         </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Cor do Marcador</label>
+                        <input type="text" id="meta-markerColor" placeholder="#0ea5e9">
+                    </div>
+                    <div class="form-group" style="display: flex; flex-direction: column; justify-content: flex-end;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; text-transform: none; font-size: 0.82rem; font-weight: normal; color: var(--text); margin-bottom: 8px;" title="Se desmarcado, o botão 'Mapa: Vetor' não aparece no website final">
+                            <input type="checkbox" id="meta-showMapToggle" style="width: 16px; height: 16px; cursor: pointer;">
+                            Exibir botão "Mapa: Vetor" no site final
+                        </label>
                     </div>
                 </div>
             </div>
@@ -676,6 +1017,24 @@
         </div>
     </div>
 
+    <!-- Modal GeoJSON Code -->
+    <div class="modal" id="geojson-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Código locations.geojson Gerado</h3>
+                <button class="btn" id="btn-close-geojson-modal">&times; Fechar</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Copie este código e cole no seu arquivo <code>assets/data/locations.geojson</code>:</p>
+                <pre><code id="generated-geojson-code"></code></pre>
+            </div>
+            <div style="padding: 14px 20px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px;">
+                <button class="btn btn-primary" id="btn-copy-geojson">📋 Copiar GeoJSON</button>
+                <button class="btn btn-success" id="btn-modal-download-geojson">📥 Baixar locations.geojson</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Notification -->
     <div class="toast" id="toast">Alterações salvas!</div>
 
@@ -697,13 +1056,145 @@
         let activeMarker = null;
         let isSatellite = false;
 
+        // Default GeoJSON Data
+        const DEFAULT_LOCATIONS_GEOJSON = {
+            type: "FeatureCollection",
+            features: [
+                {
+                    type: "Feature",
+                    properties: {
+                        id: "dia-30-laco",
+                        title: "Base Oceanográfica IOUSP / LACO",
+                        category: "laboratorio",
+                        date: "2026-07-30",
+                        description: "Base de Pesquisa Clarimundo de Jesus (IOUSP) na Praia do Lamberto / Enseada do Flamengo.",
+                        chapter: "dia-30-laco"
+                    },
+                    geometry: {
+                        type: "Point",
+                        coordinates: [-45.118891, -23.499909]
+                    }
+                },
+                {
+                    type: "Feature",
+                    properties: {
+                        id: "dia-31-cartas",
+                        title: "Dinâmica das Cartas (Praia do Lamberto / Enseada)",
+                        category: "ar-livre",
+                        date: "2026-07-31",
+                        description: "Roda ao ar livre à beira-mar com o baralho de cartas de ficção e futuros climáticos.",
+                        chapter: "dia-31-cartas"
+                    },
+                    geometry: {
+                        type: "Point",
+                        coordinates: [-45.118639, -23.5]
+                    }
+                },
+                {
+                    type: "Feature",
+                    properties: {
+                        id: "rio-acarau",
+                        title: "Rio Acaraú (Foz & Estuário)",
+                        category: "rio",
+                        date: "2026-08-01",
+                        description: "Percurso de observação de bacia hidrográfica, canalizações urbanas e efluentes.",
+                        chapter: "dia-01-bacias"
+                    },
+                    geometry: {
+                        type: "Point",
+                        coordinates: [-45.0682, -23.4475]
+                    }
+                },
+                {
+                    type: "Feature",
+                    properties: {
+                        id: "rio-tavares",
+                        title: "Rio Tavares (Manguezal)",
+                        category: "rio",
+                        date: "2026-08-01",
+                        description: "Monitoramento de margens, assoreamento e dinâmica de maré nos manguezais.",
+                        chapter: "dia-01-bacias"
+                    },
+                    geometry: {
+                        type: "Point",
+                        coordinates: [-45.074, -23.441]
+                    }
+                },
+                {
+                    type: "Feature",
+                    properties: {
+                        id: "rio-grande",
+                        title: "Bacia do Rio Grande",
+                        category: "rio",
+                        date: "2026-08-01",
+                        description: "Mapeamento de mata ciliar, resíduos flutuantes e circulação estuarina.",
+                        chapter: "dia-01-bacias"
+                    },
+                    geometry: {
+                        type: "Point",
+                        coordinates: [-45.0715, -23.4355]
+                    }
+                },
+                {
+                    type: "Feature",
+                    properties: {
+                        id: "dia-01-barcas",
+                        title: "Casa de Saúde Cultura Viva",
+                        category: "oficina",
+                        date: "2026-08-01",
+                        description: "Local da Oficina BARCAS e da plenária de síntese e encaminhamentos.",
+                        chapter: "dia-01-barcas"
+                    },
+                    geometry: {
+                        type: "Point",
+                        coordinates: [-45.078, -23.438]
+                    }
+                },
+                {
+                    type: "Feature",
+                    properties: {
+                        id: "track-rios",
+                        title: "Percurso Hidrográfico 01/08",
+                        category: "percurso",
+                        chapter: "dia-01-bacias"
+                    },
+                    geometry: {
+                        type: "LineString",
+                        coordinates: [
+                            [-45.0682, -23.4475],
+                            [-45.071, -23.444],
+                            [-45.074, -23.441],
+                            [-45.0725, -23.438],
+                            [-45.0715, -23.4355],
+                            [-45.078, -23.438]
+                        ]
+                    }
+                }
+            ]
+        };
+
+        // GeoJSON State
+        let workingGeojson = JSON.parse(JSON.stringify(DEFAULT_LOCATIONS_GEOJSON));
+        let selectedGeojsonIndex = 0;
+        let currentEditorMode = "chapter"; // "chapter" or "geojson"
+        let geojsonMapMarkers = [];
+        let activeGeojsonMarker = null;
+
         document.addEventListener("DOMContentLoaded", function () {
+            // Configure marked for friendly linebreaks
+            if (typeof marked !== "undefined" && marked.setOptions) {
+                marked.setOptions({
+                    gfm: true,
+                    breaks: true
+                });
+            }
+
             // Check localStorage for drafts
             const savedDraft = localStorage.getItem("mardascoisas_editor_draft");
             if (savedDraft) {
                 try {
                     workingConfig = JSON.parse(savedDraft);
-                    showToast("Rascunho anterior recuperado automaticamente.");
+                    showToast("Rascunho anterior de capítulos recuperado.");
                 } catch(e){}
             }
 
@@ -719,17 +1210,17 @@
             map = new maplibregl.Map({
                 container: "editor-map",
                 style: workingConfig.style,
-                center: workingConfig.chapters[0].location.center,
-                zoom: workingConfig.chapters[0].location.zoom,
-                pitch: workingConfig.chapters[0].location.pitch || 0,
-                bearing: workingConfig.chapters[0].location.bearing || 0
+                center: workingConfig.chapters[0]?.location?.center || [-45.07, -23.45],
+                zoom: workingConfig.chapters[0]?.location?.zoom || 12,
+                pitch: workingConfig.chapters[0]?.location?.pitch || 0,
+                bearing: workingConfig.chapters[0]?.location?.bearing || 0
             });
 
             map.addControl(new maplibregl.NavigationControl(), "top-right");
 
-            // Marker
+            // Marker for Chapter Camera (Blue)
             activeMarker = new maplibregl.Marker({ draggable: true, color: "#38bdf8" })
-                .setLngLat(workingConfig.chapters[0].location.center)
+                .setLngLat(workingConfig.chapters[0]?.location?.center || [-45.07, -23.45])
                 .addTo(map);
 
             activeMarker.on("dragend", function () {
@@ -739,20 +1230,84 @@
                 saveCurrentChapterFromForm();
             });
 
-            // Map click moves marker
+            // Marker for Active GeoJSON Point (Green Pin)
+            const initialGeoCoord = workingGeojson.features[0]?.geometry?.coordinates || [-45.118891, -23.499909];
+            activeGeojsonMarker = new maplibregl.Marker({ draggable: true, color: "#10b981" })
+                .setLngLat(initialGeoCoord)
+                .addTo(map);
+            activeGeojsonMarker.getElement().classList.add("active-geojson-pin");
+            activeGeojsonMarker.getElement().style.display = "none";
+
+            activeGeojsonMarker.on("drag", function () {
+                const lngLat = activeGeojsonMarker.getLngLat();
+                document.getElementById("geo-input-lon").value = lngLat.lng.toFixed(6);
+                document.getElementById("geo-input-lat").value = lngLat.lat.toFixed(6);
+            });
+
+            activeGeojsonMarker.on("dragend", function () {
+                const lngLat = activeGeojsonMarker.getLngLat();
+                if (selectedGeojsonIndex >= 0 && workingGeojson.features[selectedGeojsonIndex]) {
+                    const feat = workingGeojson.features[selectedGeojsonIndex];
+                    if (feat.geometry && feat.geometry.type === "Point") {
+                        feat.geometry.coordinates = [parseFloat(lngLat.lng.toFixed(6)), parseFloat(lngLat.lat.toFixed(6))];
+                        document.getElementById("geo-input-lon").value = feat.geometry.coordinates[0];
+                        document.getElementById("geo-input-lat").value = feat.geometry.coordinates[1];
+                        saveGeojsonDraft();
+                        renderGeojsonList();
+                        if (map.getSource("locations-source")) {
+                            map.getSource("locations-source").setData(workingGeojson);
+                        }
+                    }
+                }
+            });
+
+            // Map click: depends on current editor mode
             map.on("click", function (e) {
-                activeMarker.setLngLat(e.lngLat);
-                document.getElementById("input-lon").value = e.lngLat.lng.toFixed(6);
-                document.getElementById("input-lat").value = e.lngLat.lat.toFixed(6);
-                saveCurrentChapterFromForm();
+                if (currentEditorMode === "chapter") {
+                    activeMarker.setLngLat(e.lngLat);
+                    document.getElementById("input-lon").value = e.lngLat.lng.toFixed(6);
+                    document.getElementById("input-lat").value = e.lngLat.lat.toFixed(6);
+                    saveCurrentChapterFromForm();
+                } else if (currentEditorMode === "geojson" && selectedGeojsonIndex >= 0) {
+                    const feat = workingGeojson.features[selectedGeojsonIndex];
+                    if (feat && feat.geometry && feat.geometry.type === "Point") {
+                        feat.geometry.coordinates = [parseFloat(e.lngLat.lng.toFixed(6)), parseFloat(e.lngLat.lat.toFixed(6))];
+                        if (activeGeojsonMarker) {
+                            activeGeojsonMarker.setLngLat(e.lngLat);
+                            activeGeojsonMarker.getElement().style.display = "block";
+                        }
+                        document.getElementById("geo-input-lon").value = feat.geometry.coordinates[0];
+                        document.getElementById("geo-input-lat").value = feat.geometry.coordinates[1];
+                        saveGeojsonDraft();
+                        renderGeojsonMarkersOnMap();
+                        renderGeojsonList();
+                        if (map.getSource("locations-source")) {
+                            map.getSource("locations-source").setData(workingGeojson);
+                        }
+                    }
+                }
+            });
+
+            // Load GeoJSON after map is ready
+            map.on("load", function () {
+                if (workingConfig.defaultBasemap === "satellite" && !isSatellite) {
+                    document.getElementById("btn-toggle-satellite").click();
+                }
+                loadInitialGeojson();
             });
 
             // Render chapter list & initial form
             renderChapterList();
             loadChapterIntoForm(0);
+            updateCounts();
+
+            // Mode Switching (Chapters vs GeoJSON Points)
+            document.getElementById("tab-nav-chapters").addEventListener("click", () => switchEditorMode("chapter"));
+            document.getElementById("tab-nav-geojson").addEventListener("click", () => switchEditorMode("geojson"));
 
             // Listeners
             setupFormListeners();
+            setupGeojsonListeners();
             setupHeaderActions();
         });
 
@@ -810,6 +1365,11 @@
             document.getElementById("input-image").value = ch.image || "";
             document.getElementById("input-caption").value = ch.imageCaption || "";
             document.getElementById("input-description").value = ch.description || "";
+            document.getElementById("check-show-markers").checked = (ch.showMarkers !== false);
+
+            if (typeof activeTab !== "undefined" && activeTab === "preview") {
+                updateMarkdownPreview();
+            }
 
             const center = ch.location?.center || [-45.07, -23.45];
             const zoom = ch.location?.zoom || 15;
@@ -852,6 +1412,11 @@
             ch.image = document.getElementById("input-image").value;
             ch.imageCaption = document.getElementById("input-caption").value;
             ch.description = document.getElementById("input-description").value;
+            ch.showMarkers = document.getElementById("check-show-markers").checked;
+
+            if (typeof activeTab !== "undefined" && activeTab === "preview") {
+                updateMarkdownPreview();
+            }
 
             ch.location = {
                 center: [
@@ -885,6 +1450,8 @@
             inputs.forEach(id => {
                 document.getElementById(id).addEventListener("input", saveCurrentChapterFromForm);
             });
+
+            document.getElementById("check-show-markers").addEventListener("change", saveCurrentChapterFromForm);
 
             document.getElementById("input-image").addEventListener("input", function (e) {
                 updateImagePreview(e.target.value);
@@ -1032,6 +1599,18 @@
                 document.getElementById("meta-wikiUrl").value = workingConfig.wikiUrl || "";
                 document.getElementById("meta-markerColor").value = workingConfig.markerColor || "#0ea5e9";
                 document.getElementById("meta-theme").value = workingConfig.theme || "dark";
+
+                let currentBasemap = "vector";
+                if (workingConfig.defaultBasemap === "satellite") {
+                    currentBasemap = "satellite";
+                } else if (workingConfig.style && workingConfig.style.includes("dark-matter")) {
+                    currentBasemap = "dark";
+                } else if (workingConfig.style && workingConfig.style.includes("positron")) {
+                    currentBasemap = "light";
+                }
+                document.getElementById("meta-basemap").value = currentBasemap;
+                document.getElementById("meta-showMapToggle").checked = workingConfig.showMapToggle === true;
+
                 document.getElementById("meta-modal").classList.add("open");
             });
 
@@ -1049,6 +1628,32 @@
                 workingConfig.wikiUrl = document.getElementById("meta-wikiUrl").value;
                 workingConfig.markerColor = document.getElementById("meta-markerColor").value;
                 workingConfig.theme = document.getElementById("meta-theme").value;
+
+                const selectedBasemap = document.getElementById("meta-basemap").value;
+                workingConfig.defaultBasemap = selectedBasemap === "satellite" ? "satellite" : "vector";
+                if (selectedBasemap === "dark") {
+                    workingConfig.style = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
+                } else if (selectedBasemap === "light") {
+                    workingConfig.style = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
+                } else {
+                    workingConfig.style = "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json";
+                }
+                workingConfig.showMapToggle = document.getElementById("meta-showMapToggle").checked;
+
+                // Sync satellite toggle in editor map
+                if (selectedBasemap === "satellite" && !isSatellite) {
+                    document.getElementById("btn-toggle-satellite").click();
+                } else if (selectedBasemap !== "satellite" && isSatellite) {
+                    document.getElementById("btn-toggle-satellite").click();
+                }
+
+                if (selectedBasemap !== "satellite" && map && map.setStyle) {
+                    map.setStyle(workingConfig.style);
+                    map.once("style.load", function () {
+                        setupGeojsonLayersAndMarkers();
+                    });
+                }
+
                 saveDraft();
                 document.getElementById("meta-modal").classList.remove("open");
                 showToast("Metadados atualizados com sucesso!");
@@ -1102,45 +1707,574 @@
                 showToast("Download do config.js iniciado!");
             });
 
+            // Show GeoJSON Modal
+            document.getElementById("btn-show-geojson").addEventListener("click", function () {
+                const code = generateGeojsonContent();
+                document.getElementById("generated-geojson-code").textContent = code;
+                document.getElementById("geojson-modal").classList.add("open");
+            });
+
+            document.getElementById("btn-close-geojson-modal").addEventListener("click", function () {
+                document.getElementById("geojson-modal").classList.remove("open");
+            });
+
+            // Copy GeoJSON
+            document.getElementById("btn-copy-geojson").addEventListener("click", function () {
+                const code = generateGeojsonContent();
+                navigator.clipboard.writeText(code).then(() => {
+                    showToast("locations.geojson copiado para a área de transferência!");
+                });
+            });
+
+            // Download locations.geojson
+            document.getElementById("btn-download-geojson").addEventListener("click", downloadGeojsonFile);
+            document.getElementById("btn-modal-download-geojson").addEventListener("click", downloadGeojsonFile);
+
             // Save draft button
             document.getElementById("btn-save-draft").addEventListener("click", function () {
                 saveCurrentChapterFromForm();
+                saveGeojsonPointFromForm();
                 showToast("Rascunho salvo no navegador!");
             });
         }
 
-        // Helpers for WYSIWYG
-        function insertTag(tag) {
+        function updateCounts() {
+            const countCh = workingConfig.chapters ? workingConfig.chapters.length : 0;
+            const countGeo = workingGeojson.features ? workingGeojson.features.filter(f => f.geometry && f.geometry.type === "Point").length : 0;
+            const elCh = document.getElementById("count-chapters");
+            const elGeo = document.getElementById("count-geojson");
+            if (elCh) elCh.textContent = countCh;
+            if (elGeo) elGeo.textContent = countGeo;
+        }
+
+        // --- GeoJSON Handling ---
+        function loadInitialGeojson() {
+            const savedDraft = localStorage.getItem("mardascoisas_geojson_draft") || localStorage.getItem("documental_editor_geojson_draft");
+            if (savedDraft) {
+                try {
+                    workingGeojson = JSON.parse(savedDraft);
+                    setupGeojsonLayersAndMarkers();
+                    return;
+                } catch (e) {}
+            }
+
+            fetch("assets/data/locations.geojson?t=" + Date.now())
+                .then(res => res.json())
+                .then(data => {
+                    workingGeojson = data;
+                    setupGeojsonLayersAndMarkers();
+                })
+                .catch(err => {
+                    console.log("GeoJSON fetch notice (using defaults):", err);
+                    workingGeojson = JSON.parse(JSON.stringify(DEFAULT_LOCATIONS_GEOJSON));
+                    setupGeojsonLayersAndMarkers();
+                });
+        }
+
+        function setupGeojsonLayersAndMarkers() {
+            updateCounts();
+            renderGeojsonList();
+
+            if (!map) return;
+
+            // Add source for line track (rivers)
+            if (!map.getSource("locations-source")) {
+                map.addSource("locations-source", {
+                    type: "geojson",
+                    data: workingGeojson
+                });
+
+                map.addLayer({
+                    id: "river-tracks",
+                    type: "line",
+                    source: "locations-source",
+                    filter: ["==", "$type", "LineString"],
+                    layout: {
+                        "line-join": "round",
+                        "line-cap": "round"
+                    },
+                    paint: {
+                        "line-color": "#38bdf8",
+                        "line-width": 3,
+                        "line-dasharray": [2, 2],
+                        "line-opacity": 0.8
+                    }
+                });
+            } else {
+                map.getSource("locations-source").setData(workingGeojson);
+            }
+
+            renderGeojsonMarkersOnMap();
+        }
+
+        function renderGeojsonList() {
+            const listEl = document.getElementById("geojson-point-list");
+            if (!listEl) return;
+            listEl.innerHTML = "";
+
+            workingGeojson.features.forEach((feat, idx) => {
+                if (feat.geometry && feat.geometry.type === "Point") {
+                    const item = document.createElement("div");
+                    item.className = `chapter-item ${idx === selectedGeojsonIndex && currentEditorMode === "geojson" ? "active" : ""}`;
+                    const category = feat.properties.category ? `[${feat.properties.category}] ` : "";
+                    item.innerHTML = `
+                        <div onclick="selectGeojsonPoint(${idx})" style="flex: 1; overflow: hidden; cursor: pointer;">
+                            <div class="chapter-item-text">📍 ${feat.properties.title || "Sem título"}</div>
+                            <div class="chapter-item-sub">${category}ID: ${feat.properties.id || "sem-id"}</div>
+                        </div>
+                    `;
+                    listEl.appendChild(item);
+                }
+            });
+            updateCounts();
+        }
+
+        function renderGeojsonMarkersOnMap() {
+            if (!map) return;
+
+            // Remove previous secondary markers
+            geojsonMapMarkers.forEach(m => m.marker.remove());
+            geojsonMapMarkers = [];
+
+            workingGeojson.features.forEach((feat, idx) => {
+                if (feat.geometry && feat.geometry.type === "Point") {
+                    // In geojson mode, active point is displayed with the prominent green activeGeojsonMarker
+                    if (currentEditorMode === "geojson" && idx === selectedGeojsonIndex) {
+                        return;
+                    }
+
+                    const el = document.createElement("div");
+                    el.className = "geojson-other-marker";
+                    el.title = feat.properties.title || feat.properties.id || "Ponto de interesse";
+                    el.innerHTML = '<div class="geojson-dot"></div>';
+
+                    const marker = new maplibregl.Marker({ element: el })
+                        .setLngLat(feat.geometry.coordinates)
+                        .addTo(map);
+
+                    // Click selects this point and activates the green pin
+                    el.addEventListener("click", function (e) {
+                        e.stopPropagation();
+                        switchEditorMode("geojson");
+                        selectGeojsonPoint(idx);
+                    });
+
+                    geojsonMapMarkers.push({ index: idx, marker: marker, element: el });
+                }
+            });
+        }
+
+        function switchEditorMode(mode) {
+            currentEditorMode = mode;
+            const tabChapters = document.getElementById("tab-nav-chapters");
+            const tabGeojson = document.getElementById("tab-nav-geojson");
+            const viewChapters = document.getElementById("sidebar-chapters-view");
+            const viewGeojson = document.getElementById("sidebar-geojson-view");
+            const formChapter = document.getElementById("editor-form-pane");
+            const formGeojson = document.getElementById("geojson-form-pane");
+            const overlayInfo = document.querySelector(".map-overlay-info");
+
+            if (mode === "chapter") {
+                tabChapters.classList.add("active");
+                tabGeojson.classList.remove("active");
+                viewChapters.style.display = "flex";
+                viewGeojson.style.display = "none";
+                formChapter.style.display = "flex";
+                formChapter.style.flexDirection = "column";
+                formGeojson.style.display = "none";
+                if (activeMarker) activeMarker.getElement().style.display = "block";
+                if (activeGeojsonMarker) activeGeojsonMarker.getElement().style.display = "none";
+                if (overlayInfo) overlayInfo.textContent = "🖱️ Modo Capítulo: Clique no mapa para mover a câmera";
+            } else {
+                tabChapters.classList.remove("active");
+                tabGeojson.classList.add("active");
+                viewChapters.style.display = "none";
+                viewGeojson.style.display = "flex";
+                formChapter.style.display = "none";
+                formGeojson.style.display = "flex";
+                formGeojson.style.flexDirection = "column";
+                if (activeMarker) activeMarker.getElement().style.display = "none";
+                if (activeGeojsonMarker) activeGeojsonMarker.getElement().style.display = "block";
+                if (overlayInfo) overlayInfo.textContent = "📍 Modo GeoJSON: Arraste o marcador verde ou clique no mapa para movê-lo";
+
+                populateChapterSelectOptions();
+
+                if ((selectedGeojsonIndex < 0 || !workingGeojson.features[selectedGeojsonIndex]) && workingGeojson.features.length > 0) {
+                    const firstIdx = workingGeojson.features.findIndex(f => f.geometry && f.geometry.type === "Point");
+                    if (firstIdx >= 0) selectGeojsonPoint(firstIdx);
+                } else if (selectedGeojsonIndex >= 0 && workingGeojson.features[selectedGeojsonIndex]) {
+                    const feat = workingGeojson.features[selectedGeojsonIndex];
+                    if (feat.geometry && feat.geometry.type === "Point") {
+                        if (activeGeojsonMarker) {
+                            activeGeojsonMarker.setLngLat(feat.geometry.coordinates);
+                            activeGeojsonMarker.getElement().style.display = "block";
+                        }
+                        if (map) {
+                            map.flyTo({
+                                center: feat.geometry.coordinates,
+                                zoom: Math.max(map.getZoom(), 15),
+                                essential: true
+                            });
+                        }
+                    }
+                }
+            }
+
+            renderChapterList();
+            renderGeojsonList();
+            renderGeojsonMarkersOnMap();
+        }
+
+        function populateChapterSelectOptions() {
+            const sel = document.getElementById("geo-input-chapter");
+            if (!sel) return;
+            const currentVal = sel.value;
+            sel.innerHTML = '<option value="">(Nenhum capítulo vinculado)</option>';
+            if (workingConfig && workingConfig.chapters) {
+                workingConfig.chapters.forEach((ch, idx) => {
+                    const opt = document.createElement("option");
+                    opt.value = ch.id;
+                    opt.textContent = `[${idx + 1}] ${ch.title || ch.badge || ch.id} (${ch.id})`;
+                    sel.appendChild(opt);
+                });
+            }
+            if (currentVal) sel.value = currentVal;
+        }
+
+        function selectGeojsonPoint(idx) {
+            saveGeojsonPointFromForm();
+            selectedGeojsonIndex = idx;
+            const feat = workingGeojson.features[idx];
+            if (!feat) return;
+
+            populateChapterSelectOptions();
+
+            document.getElementById("geo-input-title").value = feat.properties.title || "";
+            document.getElementById("geo-input-id").value = feat.properties.id || "";
+            document.getElementById("geo-input-category").value = feat.properties.category || "";
+            document.getElementById("geo-input-date").value = feat.properties.date || "";
+            document.getElementById("geo-input-description").value = feat.properties.description || "";
+
+            const targetChapter = feat.properties.chapter || feat.properties.chapterId || (workingConfig.chapters && workingConfig.chapters.some(c => c.id === feat.properties.id) ? feat.properties.id : "");
+            document.getElementById("geo-input-chapter").value = targetChapter;
+
+            if (feat.geometry && feat.geometry.type === "Point") {
+                document.getElementById("geo-input-lon").value = feat.geometry.coordinates[0];
+                document.getElementById("geo-input-lat").value = feat.geometry.coordinates[1];
+
+                if (activeGeojsonMarker) {
+                    activeGeojsonMarker.setLngLat(feat.geometry.coordinates);
+                    if (currentEditorMode === "geojson") {
+                        activeGeojsonMarker.getElement().style.display = "block";
+                    }
+                }
+
+                if (map) {
+                    map.flyTo({
+                        center: feat.geometry.coordinates,
+                        zoom: Math.max(map.getZoom(), 15),
+                        essential: true
+                    });
+                }
+            }
+
+            renderGeojsonList();
+            renderGeojsonMarkersOnMap();
+        }
+
+        function saveGeojsonPointFromForm() {
+            if (selectedGeojsonIndex < 0 || selectedGeojsonIndex >= workingGeojson.features.length) return;
+            const feat = workingGeojson.features[selectedGeojsonIndex];
+            if (!feat) return;
+
+            feat.properties.title = document.getElementById("geo-input-title").value;
+            feat.properties.id = document.getElementById("geo-input-id").value;
+            feat.properties.category = document.getElementById("geo-input-category").value;
+            feat.properties.date = document.getElementById("geo-input-date").value;
+            feat.properties.description = document.getElementById("geo-input-description").value;
+
+            const chSel = document.getElementById("geo-input-chapter");
+            if (chSel) {
+                feat.properties.chapter = chSel.value;
+            }
+
+            const lon = parseFloat(document.getElementById("geo-input-lon").value);
+            const lat = parseFloat(document.getElementById("geo-input-lat").value);
+            if (!isNaN(lon) && !isNaN(lat) && feat.geometry && feat.geometry.type === "Point") {
+                feat.geometry.coordinates = [lon, lat];
+            }
+
+            saveGeojsonDraft();
+        }
+
+        function saveGeojsonDraft() {
+            localStorage.setItem("mardascoisas_geojson_draft", JSON.stringify(workingGeojson));
+        }
+
+        function setupGeojsonListeners() {
+            const geoInputs = ["geo-input-title", "geo-input-id", "geo-input-category", "geo-input-date", "geo-input-description"];
+            geoInputs.forEach(id => {
+                document.getElementById(id).addEventListener("input", function () {
+                    saveGeojsonPointFromForm();
+                    renderGeojsonList();
+                });
+            });
+
+            document.getElementById("geo-input-chapter").addEventListener("change", function () {
+                saveGeojsonPointFromForm();
+            });
+
+            document.getElementById("geo-input-lon").addEventListener("input", function () {
+                const lon = parseFloat(this.value);
+                const lat = parseFloat(document.getElementById("geo-input-lat").value);
+                if (!isNaN(lon) && !isNaN(lat) && activeGeojsonMarker) {
+                    activeGeojsonMarker.setLngLat([lon, lat]);
+                    map.flyTo({ center: [lon, lat] });
+                }
+                saveGeojsonPointFromForm();
+                renderGeojsonList();
+                if (map.getSource("locations-source")) {
+                    map.getSource("locations-source").setData(workingGeojson);
+                }
+            });
+
+            document.getElementById("geo-input-lat").addEventListener("input", function () {
+                const lat = parseFloat(this.value);
+                const lon = parseFloat(document.getElementById("geo-input-lon").value);
+                if (!isNaN(lon) && !isNaN(lat) && activeGeojsonMarker) {
+                    activeGeojsonMarker.setLngLat([lon, lat]);
+                    map.flyTo({ center: [lon, lat] });
+                }
+                saveGeojsonPointFromForm();
+                renderGeojsonList();
+                if (map.getSource("locations-source")) {
+                    map.getSource("locations-source").setData(workingGeojson);
+                }
+            });
+
+            // Add GeoJSON Point
+            document.getElementById("btn-add-geojson-point").addEventListener("click", function () {
+                const center = map.getCenter();
+                const newPoint = {
+                    type: "Feature",
+                    properties: {
+                        id: "ponto-" + (workingGeojson.features.length + 1),
+                        title: "Novo Ponto de Interesse",
+                        category: "local",
+                        date: "",
+                        description: "Descrição do ponto no mapa..."
+                    },
+                    geometry: {
+                        type: "Point",
+                        coordinates: [parseFloat(center.lng.toFixed(6)), parseFloat(center.lat.toFixed(6))]
+                    }
+                };
+                workingGeojson.features.push(newPoint);
+                switchEditorMode("geojson");
+                selectGeojsonPoint(workingGeojson.features.length - 1);
+                saveGeojsonDraft();
+                if (map.getSource("locations-source")) {
+                    map.getSource("locations-source").setData(workingGeojson);
+                }
+                showToast("Novo ponto GeoJSON criado no centro da tela!");
+            });
+
+            // Reset GeoJSON from locations.geojson file
+            document.getElementById("btn-reset-geojson").addEventListener("click", function () {
+                if (confirm("Deseja descartar as alterações locais dos pontos GeoJSON e recarregar o locations.geojson original?")) {
+                    localStorage.removeItem("mardascoisas_geojson_draft");
+                    localStorage.removeItem("documental_editor_geojson_draft");
+                    fetch("assets/data/locations.geojson?t=" + Date.now())
+                        .then(res => res.json())
+                        .then(data => {
+                            workingGeojson = data;
+                            setupGeojsonLayersAndMarkers();
+                            if (currentEditorMode === "geojson") {
+                                const firstIdx = workingGeojson.features.findIndex(f => f.geometry && f.geometry.type === "Point");
+                                if (firstIdx >= 0) selectGeojsonPoint(firstIdx);
+                            }
+                            showToast("locations.geojson original recarregado!");
+                        })
+                        .catch(err => {
+                            console.log("Fetch failed, using default:", err);
+                            workingGeojson = JSON.parse(JSON.stringify(DEFAULT_LOCATIONS_GEOJSON));
+                            setupGeojsonLayersAndMarkers();
+                            if (currentEditorMode === "geojson") {
+                                const firstIdx = workingGeojson.features.findIndex(f => f.geometry && f.geometry.type === "Point");
+                                if (firstIdx >= 0) selectGeojsonPoint(firstIdx);
+                            }
+                            showToast("locations.geojson padrão restaurado!");
+                        });
+                }
+            });
+
+            // Delete GeoJSON Point
+            document.getElementById("btn-delete-geojson-point").addEventListener("click", function () {
+                if (selectedGeojsonIndex < 0) return;
+                const feat = workingGeojson.features[selectedGeojsonIndex];
+                const title = feat?.properties?.title || "este ponto";
+                if (confirm(`Tem certeza que deseja excluir o ponto "${title}"?`)) {
+                    workingGeojson.features.splice(selectedGeojsonIndex, 1);
+                    selectedGeojsonIndex = -1;
+                    saveGeojsonDraft();
+                    renderGeojsonList();
+                    if (map.getSource("locations-source")) {
+                        map.getSource("locations-source").setData(workingGeojson);
+                    }
+                    const firstIdx = workingGeojson.features.findIndex(f => f.geometry && f.geometry.type === "Point");
+                    if (firstIdx >= 0) {
+                        selectGeojsonPoint(firstIdx);
+                    } else {
+                        if (activeGeojsonMarker) activeGeojsonMarker.getElement().style.display = "none";
+                        renderGeojsonMarkersOnMap();
+                    }
+                    showToast("Ponto GeoJSON excluído.");
+                }
+            });
+        }
+
+        function generateGeojsonContent() {
+            saveGeojsonPointFromForm();
+            return JSON.stringify(workingGeojson, null, 2);
+        }
+
+        function downloadGeojsonFile() {
+            const code = generateGeojsonContent();
+            const blob = new Blob([code], { type: "application/json;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "locations.geojson";
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast("Download do locations.geojson iniciado!");
+        }
+
+        // Helpers for Markdown Editor & Tabs
+        let activeTab = "write";
+
+        function switchTab(tab) {
+            activeTab = tab;
+            const writeBtn = document.getElementById("tab-write");
+            const previewBtn = document.getElementById("tab-preview");
+            const textarea = document.getElementById("input-description");
+            const toolbar = document.getElementById("markdown-toolbar");
+            const previewDiv = document.getElementById("preview-description");
+
+            if (tab === "write") {
+                writeBtn.classList.add("active");
+                previewBtn.classList.remove("active");
+                textarea.style.display = "block";
+                toolbar.style.display = "flex";
+                previewDiv.style.display = "none";
+                textarea.focus();
+            } else {
+                writeBtn.classList.remove("active");
+                previewBtn.classList.add("active");
+                textarea.style.display = "none";
+                toolbar.style.display = "none";
+                previewDiv.style.display = "block";
+                updateMarkdownPreview();
+            }
+        }
+
+        function updateMarkdownPreview() {
+            const previewDiv = document.getElementById("preview-description");
+            const text = document.getElementById("input-description").value || "*(Sem texto para este capítulo)*";
+            if (typeof marked !== "undefined" && typeof marked.parse === "function") {
+                previewDiv.innerHTML = marked.parse(text);
+            } else {
+                previewDiv.innerHTML = text;
+            }
+        }
+
+        function insertMd(type) {
             const ta = document.getElementById("input-description");
             const start = ta.selectionStart;
             const end = ta.selectionEnd;
             const text = ta.value;
-            const selected = text.substring(start, end) || "texto";
-            
+            const selected = text.substring(start, end);
+
             let replacement = "";
-            if (tag === "a") {
-                replacement = `<a href="https://" target="_blank">${selected}</a>`;
-            } else {
-                replacement = `<${tag}>${selected}</${tag}>`;
+            let cursorOffset = 0;
+
+            switch (type) {
+                case "bold":
+                    replacement = `**${selected || "texto em negrito"}**`;
+                    cursorOffset = selected ? replacement.length : 2;
+                    break;
+                case "italic":
+                    replacement = `*${selected || "texto em itálico"}*`;
+                    cursorOffset = selected ? replacement.length : 1;
+                    break;
+                case "heading":
+                    replacement = `\n### ${selected || "Subtítulo"}\n`;
+                    cursorOffset = replacement.length;
+                    break;
+                case "link":
+                    replacement = `[${selected || "texto do link"}](https://exemplo.com)`;
+                    cursorOffset = replacement.length;
+                    break;
+                case "quote":
+                    replacement = `\n> ${selected || "Citação ou destaque..."}\n`;
+                    cursorOffset = replacement.length;
+                    break;
+                case "list":
+                    replacement = `\n- ${selected || "Item 1"}\n- Item 2\n`;
+                    cursorOffset = replacement.length;
+                    break;
             }
 
             ta.value = text.substring(0, start) + replacement + text.substring(end);
             saveCurrentChapterFromForm();
             ta.focus();
+            ta.setSelectionRange(start + cursorOffset, start + cursorOffset);
         }
 
         function insertCallout() {
             const ta = document.getElementById("input-description");
-            const snippet = `\n<div class="callout-box">\n    <strong>Destaque:</strong>\n    <p>Texto do destaque...</p>\n</div>\n`;
+            const snippet = `\n> **Destaque:**\n> Informação importante ou notas de campo...\n`;
             ta.value += snippet;
             saveCurrentChapterFromForm();
+            ta.focus();
         }
 
-        function insertList() {
+        function insertVideoLightbox() {
             const ta = document.getElementById("input-description");
-            const snippet = `\n<ul>\n    <li>Item 1</li>\n    <li>Item 2</li>\n</ul>\n`;
-            ta.value += snippet;
+            const start = ta.selectionStart;
+            const end = ta.selectionEnd;
+            const text = ta.value;
+            const selected = text.substring(start, end).trim();
+
+            const videoUrl = (selected.startsWith("http") || selected.endsWith(".mp4")) ? selected : "URL_DO_VIDEO.mp4";
+            const sampleImg = (availableImages.length > 0) ? availableImages[0] : "assets/images/f_caderno_1.jpg";
+            const snippet = `\n[![Legenda do vídeo / Clique para assistir no lightbox](${sampleImg})](${videoUrl} "Clique para assistir no lightbox")\n`;
+
+            ta.value = text.substring(0, start) + snippet + text.substring(end);
             saveCurrentChapterFromForm();
+            ta.focus();
+        }
+
+        function insertVideo() {
+            const ta = document.getElementById("input-description");
+            const start = ta.selectionStart;
+            const end = ta.selectionEnd;
+            const text = ta.value;
+            const selected = text.substring(start, end).trim();
+
+            const videoUrl = (selected.startsWith("http") || selected.endsWith(".mp4")) ? selected : "URL_DO_VIDEO.mp4";
+            const prefix = `\n<video controls playsinline preload="metadata">\n    <source src="`;
+            const suffix = `" type="video/mp4">\n    Seu navegador não suporta reprodução de vídeo.\n</video>\n`;
+            const snippet = prefix + videoUrl + suffix;
+
+            ta.value = text.substring(0, start) + snippet + text.substring(end);
+            saveCurrentChapterFromForm();
+            ta.focus();
+
+            // Seleciona o placeholder para permitir colar a URL diretamente
+            const urlStart = start + prefix.length;
+            const urlEnd = urlStart + videoUrl.length;
+            ta.setSelectionRange(urlStart, urlEnd);
         }
 
         function showToast(msg) {

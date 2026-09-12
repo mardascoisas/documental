@@ -4,11 +4,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "dia-30-laco",
-        "title": "Base Oceanográfica IOUSP / LACO",
+        "id": "laco",
+        "title": "LACO",
         "category": "laboratorio",
-        "date": "2026-07-30",
-        "description": "Base de Pesquisa Clarimundo de Jesus (IOUSP) na Praia do Lamberto / Enseada do Flamengo."
+        "date": "",
+        "description": "",
+        "chapter": "dia-30-laco"
       },
       "geometry": {
         "type": "Point",
@@ -21,34 +22,18 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "dia-31-cartas",
-        "title": "Dinâmica das Cartas (Praia do Lamberto / Enseada)",
-        "category": "ar-livre",
-        "date": "2026-07-31",
-        "description": "Roda ao ar livre à beira-mar com o baralho de cartas de ficção e futuros climáticos."
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -45.118639,
-          -23.5
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "id": "rio-acarau",
-        "title": "Rio Acaraú (Foz & Estuário)",
+        "title": "Rio Acaraú (Foz)",
         "category": "rio",
         "date": "2026-08-01",
-        "description": "Percurso de observação de bacia hidrográfica, canalizações urbanas e efluentes."
+        "description": "Percurso de observação de bacia hidrográfica no bairro Acaraú.",
+        "chapter": "dia-01-bacias"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -45.0682,
-          -23.4475
+          -45.054931,
+          -23.459131
         ]
       }
     },
@@ -56,16 +41,17 @@
       "type": "Feature",
       "properties": {
         "id": "rio-tavares",
-        "title": "Rio Tavares (Manguezal)",
+        "title": "Rio Tavares (Foz)",
         "category": "rio",
         "date": "2026-08-01",
-        "description": "Monitoramento de margens, assoreamento e dinâmica de maré nos manguezais."
+        "description": "Percurso de observação de bacia hidrográfica no Itaguá.",
+        "chapter": "dia-01-bacias"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -45.074,
-          -23.441
+          -45.066855,
+          -23.446393
         ]
       }
     },
@@ -73,16 +59,17 @@
       "type": "Feature",
       "properties": {
         "id": "rio-grande",
-        "title": "Bacia do Rio Grande",
+        "title": "Rio Grande (Foz)",
         "category": "rio",
         "date": "2026-08-01",
-        "description": "Mapeamento de mata ciliar, resíduos flutuantes e circulação estuarina."
+        "description": "Percurso de observação de bacia hidrográfica a partir da Ilha dos Pescadores.",
+        "chapter": "dia-01-bacias"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -45.0715,
-          -23.4355
+          -45.069451,
+          -23.432045
         ]
       }
     },
@@ -90,16 +77,17 @@
       "type": "Feature",
       "properties": {
         "id": "dia-01-barcas",
-        "title": "Casa de Saúde Cultura Viva",
+        "title": "Casa Saúde Cultura Viva",
         "category": "oficina",
         "date": "2026-08-01",
-        "description": "Local da Oficina BARCAS e da plenária de síntese e encaminhamentos."
+        "description": "Local onde foi realizada a oficina BARCAS Regenerativas.",
+        "chapter": "dia-01-barcas"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -45.078,
-          -23.438
+          -45.074681,
+          -23.431545
         ]
       }
     },
