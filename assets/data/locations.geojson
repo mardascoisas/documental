@@ -90,43 +90,6 @@
           -23.431545
         ]
       }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id": "track-rios",
-        "title": "Percurso Hidrográfico 01/08",
-        "category": "percurso"
-      },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [
-            -45.0682,
-            -23.4475
-          ],
-          [
-            -45.071,
-            -23.444
-          ],
-          [
-            -45.074,
-            -23.441
-          ],
-          [
-            -45.0725,
-            -23.438
-          ],
-          [
-            -45.0715,
-            -23.4355
-          ],
-          [
-            -45.078,
-            -23.438
-          ]
-        ]
-      }
     }
   ]
 }
